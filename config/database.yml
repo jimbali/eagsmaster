@@ -14,8 +14,8 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password:
-  host: localhost
+  password: <%= ENV.fetch("DB_PASSWORD") { '' } %>
+  host: <%= ENV.fetch("DB_HOST") { 'localhost' } %>
 
 development:
   <<: *default
@@ -49,6 +49,4 @@ test:
 #
 production:
   <<: *default
-  database: eagsmaster_production
-  username: eagsmaster
-  password: <%= ENV['EAGSMASTER_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
