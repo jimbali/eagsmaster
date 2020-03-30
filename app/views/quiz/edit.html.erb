@@ -1,0 +1,119 @@
+<h2>Edit quiz</h2>
+<%= form_for @quiz, url: quiz_url, id: @quiz.id do |f| %>
+  <div class="row">
+    <%= f.label :name, 'Name' %>
+  </div>
+  <div class="row">
+    <%= f.text_field :name %>
+  </div>
+  <div class="row">
+    <%=
+      f.label :code,
+              'ID code (a short code that people can use to find your quiz)'
+    %>
+  </div>
+  <div class="row">
+    <%= f.text_field :code %>
+  </div>
+  <div class="row">
+    <%= f.label :cursor, 'Current question' %>
+  </div>
+  <div class="row">
+    <%=
+      f.collection_select :cursor,
+                          @quiz.questions,
+                          :id,
+                          :title,
+                          include_blank: true
+    %>
+  </div>
+  <%= f.submit %>
+<% end %>
+<h3>Questions</h3>
+<p id="example-console">Changes will be autosaved</p>
+<div id="example"></div>
+<script>
+  Handsontable = Packs.application.Handsontable
+  var data = <%=
+    raw(
+      @quiz.questions.map do |question|
+        [question.id, question.title, question.expired]
+      end.to_json
+    )
+  %>;
+
+  var autosaveNotification;
+  var exampleConsole = document.getElementById('example-console');
+  var container = document.getElementById('example');
+  var token = document.querySelector('meta[name="csrf-token"]').content;
+  var hot = new Handsontable(container, {
+    data: data,
+    rowHeaders: false,
+    colHeaders: false,
+    filters: true,
+    dropdownMenu: true,
+    licenseKey: 'non-commercial-and-evaluation',
+    hiddenColumns: {
+      columns: [0],
+      indicators: true
+    },
+    contextMenu: ['remove_row'],
+    afterChange: function (change, source) {
+      if (source === 'loadData') {
+        return;
+      }
+      clearTimeout(autosaveNotification);
+      row = data[change[0][0]];
+      questionId = row[0];
+      fetch(
+        '<%= quiz_question_index_url(quiz_id: @quiz.id) %>' + '/' + questionId,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': token
+          },
+          body: JSON.stringify(
+            { question: { title: row[1], expired: row[2] == 'true' } }
+          )
+        }
+      )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+        autosaveNotification = setTimeout(function() {
+          exampleConsole.innerText ='Changes will be autosaved';
+        }, 2000);
+      });
+    },
+    beforeRemoveRow: function(index, amount, physicalRows, source) {
+      for(var i = 0; i < physicalRows.length; i++) {
+        index = physicalRows[i];
+        id = data[index][0];
+        fetch(
+          '<%= quiz_question_index_url(quiz_id: @quiz.id) %>' + '/' + id,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': token
+            }
+          }
+        )
+        .then((response) => {
+          exampleConsole.innerText  = 'Autosaved (row deleted)';
+          autosaveNotification = setTimeout(function() {
+            exampleConsole.innerText ='Changes will be autosaved';
+          }, 2000);
+        });
+      }
+    }
+  });
+</script>
+<%= form_for(:question, url: quiz_question_index_url(quiz_id: @quiz.id)) do |f| %>
+  <%= f.text_field :title %>
+  <%= f.submit 'Add question' %>
+<% end %>
+<h3>Answers</h3>

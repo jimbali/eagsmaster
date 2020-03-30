@@ -1,0 +1,19 @@
+<h2><%= @question.title %></h2>
+<table>
+  <thead>
+    <tr>
+      <td>Team</td>
+      <td>Answer</td>
+      <td>Points</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @results.each do |row| %>
+      <tr>
+        <td><%= row.user.nickname %></td>
+        <td><%= row.answer %></td>
+        <td><%= row.points %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
