@@ -20,6 +20,7 @@ RUN bundle install
 COPY . .
 
 RUN bundle exec rails webpacker:install
+RUN rails assets:precompile
 
 EXPOSE 3000
 

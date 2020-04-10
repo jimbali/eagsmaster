@@ -21,4 +21,6 @@ import Handsontable from 'handsontable'
 
 import '../stylesheets/application'
 
+import 'bootstrap'
+
 export { Handsontable }

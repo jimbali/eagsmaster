@@ -18,6 +18,7 @@ services:
     tmpfs: /app/tmp
     volumes:
       - ./:/app/:rw
+      - node_modules:/app/node_modules
   runner:
     build:
       context: ./
@@ -33,3 +34,5 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: livSbI9IIoawmhk5
     image: mysql:5.7
+volumes:
+  node_modules:

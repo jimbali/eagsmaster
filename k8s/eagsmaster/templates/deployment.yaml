@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eagsmaster.fullname" . }}
+  labels:
+    {{- include "eagsmaster.labels" . | nindent 4 }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "eagsmaster.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "eagsmaster.selectorLabels" . | nindent 8 }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                      - {{ include "eagsmaster.name" . }}
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "eagsmaster.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: eagsmaster-db-creds
+                  key: url
+            - name: RACK_ENV
+              value: production
+            - name: RAILS_LOG_TO_STDOUT
+              value: 'true'
+            - name: RAILS_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: eagsmaster-rails-master-key
+                  key: key
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - command:
+            - /cloud_sql_proxy
+            - -instances=freebail-wedding:europe-west2:freebail-wedding=tcp:5432
+            - -credential_file=/secrets/cloudsql/credentials.json
+          image: gcr.io/cloudsql-docker/gce-proxy:1.14
+          name: cloudsql-proxy
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: eagsmaster-cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: eagsmaster-cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials

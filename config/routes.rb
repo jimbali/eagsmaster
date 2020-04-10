@@ -12,4 +12,6 @@ Rails.application.routes.draw do
   end
 
   get 'join', to: 'quiz#join'
+
+  get 'health', to: 'health#index'
 end
