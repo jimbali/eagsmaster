@@ -38,7 +38,11 @@
       var data = <%=
         raw(
           @quiz.questions.map do |question|
-            [question.id, question.title, question.expired]
+            {
+              id: question.id,
+              title: question.title,
+              expired: question.expired
+            }
           end.to_json
         )
       %>;
@@ -50,14 +54,14 @@
       var hot = new Handsontable(container, {
         data: data,
         rowHeaders: false,
-        colHeaders: ['ID', 'Title', 'Finished answering?'],
+        colHeaders: ['Title', 'Finished answering?'],
+        columns: [
+          { data: 'title' },
+          { data: 'expired', type: 'checkbox' }
+        ],
         filters: true,
         dropdownMenu: true,
         licenseKey: 'non-commercial-and-evaluation',
-        hiddenColumns: {
-          columns: [0],
-          indicators: true
-        },
         contextMenu: ['remove_row'],
         afterChange: function (change, source) {
           if (source === 'loadData') {
@@ -65,7 +69,9 @@
           }
           clearTimeout(autosaveNotification);
           row = data[change[0][0]];
-          questionId = row[0];
+          key = change[0][1];
+          questionId = row['id'];
+          console.log(questionId);
           fetch(
             '<%= quiz_question_index_url(quiz_id: @quiz.id) %>' + '/' + questionId,
             {
@@ -75,7 +81,7 @@
                 'X-CSRF-Token': token
               },
               body: JSON.stringify(
-                { question: { title: row[1], expired: row[2] == 'true' } }
+                { question: { title: row.title, expired: row.expired } }
               )
             }
           )
