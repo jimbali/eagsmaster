@@ -1,19 +1,19 @@
-<h2>Create a quiz</h2>
-<%= form_for @quiz, url: quiz_index_url do |f| %>
-  <div class="row">
-    <%= f.label :name, 'Name' %>
+<div class="row">
+  <div class="col-12 mt-2">
+    <h2>Create a quiz</h2>
+    <%= form_for @quiz, url: quiz_index_url do |f| %>
+      <div class="form-group">
+        <%= f.label :name, 'Name' %>
+        <%= f.text_field :name, class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%=
+          f.label :code,
+                  'ID code (a short code that people can use to find your quiz)'
+        %>
+        <%= f.text_field :code, class: 'form-control' %>
+      </div>
+      <%= f.submit class: 'btn btn-primary' %>
+    <% end %>
   </div>
-  <div class="row">
-    <%= f.text_field :name %>
-  </div>
-  <div class="row">
-    <%=
-      f.label :code,
-              'ID code (a short code that people can use to find your quiz)'
-    %>
-  </div>
-  <div class="row">
-    <%= f.text_field :code %>
-  </div>
-  <%= f.submit %>
-<% end %>
+</div>
