@@ -51,6 +51,8 @@ spec:
                 secretKeyRef:
                   name: eagsmaster-rails-master-key
                   key: key
+            - name: RAILS_SERVE_STATIC_FILES
+              value: enabled
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
