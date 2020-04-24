@@ -18,6 +18,7 @@ require('channels')
 
 global.toastr = require('toastr')
 import Handsontable from 'handsontable'
+global.Handsontable = Handsontable
 
 import '../stylesheets/application'
 
