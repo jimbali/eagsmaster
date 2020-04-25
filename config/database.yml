@@ -16,6 +16,8 @@ default: &default
   username: root
   password: <%= ENV.fetch("DB_PASSWORD") { '' } %>
   host: <%= ENV.fetch("DB_HOST") { 'localhost' } %>
+  variables:
+    sql_mode: TRADITIONAL
 
 development:
   <<: *default

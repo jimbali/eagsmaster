@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_04_142756) do
+ActiveRecord::Schema.define(version: 2020_04_25_111929) do
 
   create_table "question_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "question_id", null: false
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_04_04_142756) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "points", default: 0
+    t.index ["user_id", "question_id"], name: "index_question_users_on_user_id_and_question_id", unique: true
   end
 
   create_table "questions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

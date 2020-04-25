@@ -81,20 +81,25 @@ class QuizController < ApplicationController
     end
 
     cols << { data: 'totalPoints' }
-    cols
   end
 
   def progress_data
-    @quiz.players.map do |player|
-      data = {
-        playerId: player.id,
-        rank: 'rank',
-        team: player.nickname,
-        totalPoints: @quiz.points_for(player)
+    rank = 1
+    points_memo = nil
+
+    @quiz.results.map.with_index(1) do |result, i|
+      rank = i if points_memo && result.total_points < points_memo
+      points_memo = result.total_points
+
+      {
+        playerId: result.user_id,
+        rank: rank,
+        team: result.team,
+        totalPoints: result.total_points
       }.tap do |data|
         @quiz.questions.each do |question|
           question_user = QuestionUser.find_by(
-            question: question, user: player
+            question: question, user: result.user
           )
           tag = "question#{question.id}"
           data["#{tag}Answer"] = question_user&.answer

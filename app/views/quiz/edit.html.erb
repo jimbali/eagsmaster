@@ -130,14 +130,13 @@
     <p id="example-console2">Changes will be autosaved</p>
     <div id="example2"></div>
     <script>
-      var data = <%= raw @progress_data.to_json %>;
-      console.log(data);
+      var data2 = <%= raw @progress_data.to_json %>;
       var autosaveNotification2;
       var exampleConsole = document.getElementById('example-console2');
       var container = document.getElementById('example2');
       var token = document.querySelector('meta[name="csrf-token"]').content;
       var hot2 = new Handsontable(container, {
-        data: data,
+        data: data2,
         rowHeaders: false,
         colHeaders: <%= raw @column_headers.to_json %>,
         columns: <%= raw @column_data.to_json %>,
@@ -158,7 +157,7 @@
 
           var questionId = Number(match[1]);
 
-          var row = data[change[0][0]];
+          var row = data2[change[0][0]];
           var userId = row['playerId'];
 
           var points = Number(change[0][3]);
