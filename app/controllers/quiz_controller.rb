@@ -31,6 +31,9 @@ class QuizController < ApplicationController
 
   def edit
     @quiz = Quiz.find(params[:id])
+    @column_headers = column_headers
+    @column_data = column_data
+    @progress_data = progress_data
   end
 
   def update
@@ -42,25 +45,62 @@ class QuizController < ApplicationController
 
   def progress
     @quiz = Quiz.find(params[:quiz_id])
-    players = @quiz.players
-    questions = @quiz.questions
     @column_headers = column_headers
-    @rows = players.map do |player|
-      row = [player.nickname, @quiz.points_for(player), @quiz.rank(player)]
-      row += @quiz.questions.flat_map do |question|
-        question_user = QuestionUser.find_by(
-          question_id: question, user: player
-        )
-        [question_user&.answer, question_user&.points]
-      end
-    end
+    @column_data = column_data
+    @progress_data = progress_data
+  end
+
+  def update_points
+    Rails.logger.debug(params)
+    question_user = QuestionUser.find_by(
+      user_id: params[:userId], question_id: params[:questionId]
+    )
+    question_user.points = params['points']
+    question_user.save!
   end
 
   private
 
   def column_headers
-    ['Team', 'Total Points', 'Rank'] + @quiz.questions.flat_map do |question|
+    ['Rank', 'Team', 'Total Points'] + @quiz.questions.flat_map do |question|
       [question.title, 'Points']
+    end + ['Total Points']
+  end
+
+  def column_data
+    cols = [
+      { data: 'rank' },
+      { data: 'team' },
+      { data: 'totalPoints' }
+    ]
+
+    @quiz.questions.each do |question|
+      tag = "question#{question.id}"
+      cols << { data: "#{tag}Answer" }
+      cols << { data: "#{tag}Points" }
+    end
+
+    cols << { data: 'totalPoints' }
+    cols
+  end
+
+  def progress_data
+    @quiz.players.map do |player|
+      data = {
+        playerId: player.id,
+        rank: 'rank',
+        team: player.nickname,
+        totalPoints: @quiz.points_for(player)
+      }.tap do |data|
+        @quiz.questions.each do |question|
+          question_user = QuestionUser.find_by(
+            question: question, user: player
+          )
+          tag = "question#{question.id}"
+          data["#{tag}Answer"] = question_user&.answer
+          data["#{tag}Points"] = question_user&.points
+        end
+      end
     end
   end
 end

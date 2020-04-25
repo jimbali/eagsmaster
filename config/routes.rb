@@ -11,7 +11,9 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'join', to: 'quiz#join'
+  get :join, to: 'quiz#join'
 
-  get 'health', to: 'health#index'
+  post :update_points, to: 'quiz#update_points'
+
+  get :health, to: 'health#index'
 end

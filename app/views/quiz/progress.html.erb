@@ -5,6 +5,8 @@
 <script>
   var data = <%= raw @rows.to_json %>;
   var columnHeaders = <%= raw @column_headers.to_json %>;
+  console.log(columnHeaders);
+  console.log(data);
 
   var autosaveNotification;
   var exampleConsole = document.getElementById('example-console');

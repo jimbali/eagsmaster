@@ -127,5 +127,72 @@
 <div class="row mt-4">
   <div class="col-12">
     <h3>Answers</h3>
+    <p id="example-console2">Changes will be autosaved</p>
+    <div id="example2"></div>
+    <script>
+      var data = <%= raw @progress_data.to_json %>;
+      console.log(data);
+      var autosaveNotification2;
+      var exampleConsole = document.getElementById('example-console2');
+      var container = document.getElementById('example2');
+      var token = document.querySelector('meta[name="csrf-token"]').content;
+      var hot2 = new Handsontable(container, {
+        data: data,
+        rowHeaders: false,
+        colHeaders: <%= raw @column_headers.to_json %>,
+        columns: <%= raw @column_data.to_json %>,
+        filters: true,
+        dropdownMenu: true,
+        licenseKey: 'non-commercial-and-evaluation',
+        contextMenu: ['remove_row'],
+        afterChange: function (change, source) {
+          if (source === 'loadData') return;
+          console.log(change);
+
+          clearTimeout(autosaveNotification2);
+
+          key = change[0][1];
+          var keyRegex = /question(\d+)Points/g;
+          var match = keyRegex.exec(key);
+          if (!match) return;
+
+          var questionId = Number(match[1]);
+
+          var row = data[change[0][0]];
+          var userId = row['playerId'];
+
+          var points = Number(change[0][3]);
+
+          console.log(questionId);
+          console.log(userId);
+          console.log(points);
+
+          fetch(
+            '<%= update_points_url %>',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': token
+              },
+              body: JSON.stringify({
+                questionId: questionId,
+                userId: userId,
+                points: points
+              })
+            }
+          )
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+            autosaveNotification2 = setTimeout(function() {
+              exampleConsole.innerText ='Changes will be autosaved';
+            }, 2000);
+          });
+        }
+      });
+    </script>
   </div>
 </div>

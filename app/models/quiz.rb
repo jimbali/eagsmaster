@@ -26,6 +26,8 @@ class Quiz < ApplicationRecord
   end
 
   def player_rank(user)
-    # players.joins(:question_users).order('SUM()')
+    players.map do |player|
+      player.question_users.map(&:points)
+    end
   end
 end
