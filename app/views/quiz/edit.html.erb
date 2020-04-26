@@ -135,7 +135,7 @@
       var exampleConsole = document.getElementById('example-console2');
       var container = document.getElementById('example2');
       var token = document.querySelector('meta[name="csrf-token"]').content;
-      var hot2 = new Handsontable(container, {
+      hot2 = new Handsontable(container, {
         data: data2,
         rowHeaders: false,
         colHeaders: <%= raw @column_headers.to_json %>,
@@ -189,6 +189,15 @@
       $(document).on('ajax:success', '#add-guest-form', event => {
         data2 = event.detail[0];
         hot2.loadData(data2);
+      });
+    </script>
+    <button id="export-csv" class="btn btn-primary">Export CSV</button>
+    <script>
+      $(document).ready(function() {
+        $("#export-csv").click(function(){
+          var exportPlugin = hot2.getPlugin('exportFile');
+          exportPlugin.downloadFile('csv', { columnHeaders: true })
+        });
       });
     </script>
   </div>
