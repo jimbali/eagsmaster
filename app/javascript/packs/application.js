@@ -19,6 +19,7 @@ require('channels')
 global.toastr = require('toastr')
 import Handsontable from 'handsontable'
 global.Handsontable = Handsontable
+global.$ = jQuery
 
 import '../stylesheets/application'
 

@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   resources :quiz do
     get :progress, to: 'quiz#progress'
+    post :update_progress, to: 'quiz#update_progress'
+    post :add_guest, to: 'quiz#add_guest'
 
     resources :question do
       post 'submit_answer', to: 'question#submit_answer'
@@ -12,8 +14,6 @@ Rails.application.routes.draw do
   end
 
   get :join, to: 'quiz#join'
-
-  post :update_points, to: 'quiz#update_points'
 
   get :health, to: 'health#index'
 end

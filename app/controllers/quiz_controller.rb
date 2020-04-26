@@ -50,13 +50,37 @@ class QuizController < ApplicationController
     @progress_data = progress_data
   end
 
-  def update_points
-    Rails.logger.debug(params)
-    question_user = QuestionUser.find_by(
-      user_id: params[:userId], question_id: params[:questionId]
+  def update_progress
+    @quiz = Quiz.find(params[:quiz_id])
+    row = params[:row]
+    user_id = row[:playerId]
+
+    @quiz.questions.each do |question|
+      question_user = QuestionUser.find_or_create_by!(
+        question_id: question.id, user_id: user_id
+      )
+      question_user.answer = row["question#{question.id}Answer"]
+      question_user.points = row["question#{question.id}Points"]
+      question_user.save!
+    end
+
+    render json: progress_data
+  end
+
+  def add_guest
+    @quiz = Quiz.find(params[:quiz_id])
+    user = User.create!(
+      nickname: params[:user][:nickname],
+      email: "guestuser#{Random.rand(16)}@example.com",
+      password: SecureRandom.alphanumeric(16),
+      guest: true
     )
-    question_user.points = params['points']
-    question_user.save!
+    QuestionUser.create!(
+      question: @quiz.questions.first,
+      user: user
+    )
+
+    render json: progress_data
   end
 
   private

@@ -146,51 +146,49 @@
         contextMenu: ['remove_row'],
         afterChange: function (change, source) {
           if (source === 'loadData') return;
-          console.log(change);
 
           clearTimeout(autosaveNotification2);
 
-          key = change[0][1];
-          var keyRegex = /question(\d+)Points/g;
-          var match = keyRegex.exec(key);
-          if (!match) return;
-
-          var questionId = Number(match[1]);
-
           var row = data2[change[0][0]];
-          var userId = row['playerId'];
-
-          var points = Number(change[0][3]);
-
-          console.log(questionId);
-          console.log(userId);
-          console.log(points);
 
           fetch(
-            '<%= update_points_url %>',
+            '<%= quiz_update_progress_url(quiz_id: @quiz.id) %>',
             {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-Token': token
               },
-              body: JSON.stringify({
-                questionId: questionId,
-                userId: userId,
-                points: points
-              })
+              body: JSON.stringify({ row: row })
             }
           )
           .then((response) => {
             return response.json();
           })
-          .then((data) => {
+          .then((newData) => {
             exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
             autosaveNotification2 = setTimeout(function() {
               exampleConsole.innerText ='Changes will be autosaved';
             }, 2000);
+            data2 = newData;
+            hot2.loadData(newData);
           });
         }
+      });
+    </script>
+    <%=
+      form_for(:user,
+               url: quiz_add_guest_url(quiz_id: @quiz.id),
+               remote: true,
+               html: { id: 'add-guest-form' }) do |f|
+    %>
+      <%= f.text_field :nickname, placeholder: 'Nickname' %>
+      <%= f.submit 'Add guest player' %>
+    <% end %>
+    <script>
+      $(document).on('ajax:success', '#add-guest-form', event => {
+        data2 = event.detail[0];
+        hot2.loadData(data2);
       });
     </script>
   </div>
