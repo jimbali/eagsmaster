@@ -18,6 +18,8 @@ class QuestionController < ApplicationController
 
   def submit_answer
     @question_user = question_user(params[:question_id])
+    authorize! :update, @question_user
+
     return head :bad_request if @question_user.question.expired
 
     @question_user.answer = params[:answer]
@@ -30,6 +32,8 @@ class QuestionController < ApplicationController
 
   def create
     quiz = Quiz.find(params[:quiz_id])
+    authorize! :update, quiz
+
     quiz.questions << Question.new(params.require(:question).permit(:title))
     quiz.save!
     redirect_to edit_quiz_url id: quiz.id
@@ -37,6 +41,8 @@ class QuestionController < ApplicationController
 
   def update
     question = Question.find(params[:id])
+    authorize! :update, question
+
     question.update!(params.require(:question).permit(:title, :expired))
     question.save!
     render json: question.to_json
@@ -44,6 +50,8 @@ class QuestionController < ApplicationController
 
   def destroy
     question = Question.find(params[:id])
+    authorize! :destroy, question
+
     question.destroy!
   end
 

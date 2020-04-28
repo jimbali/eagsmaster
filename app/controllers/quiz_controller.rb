@@ -31,6 +31,8 @@ class QuizController < ApplicationController
 
   def edit
     @quiz = Quiz.find(params[:id])
+    authorize! :update, @quiz
+
     @column_headers = column_headers
     @column_data = column_data
     @progress_data = progress_data
@@ -38,13 +40,16 @@ class QuizController < ApplicationController
 
   def update
     quiz = Quiz.find(params[:id])
-    #TODO: authorize
+    authorize! :update, quiz
+
     quiz.update!(params.require(:quiz).permit(:name, :code, :cursor))
     redirect_to edit_quiz_url id: quiz.id
   end
 
   def update_progress
     @quiz = Quiz.find(params[:quiz_id])
+    authorize! :update, @quiz
+
     row = params[:row]
     user_id = row[:playerId]
 
@@ -62,6 +67,8 @@ class QuizController < ApplicationController
 
   def add_guest
     @quiz = Quiz.find(params[:quiz_id])
+    authorize! :update, quiz
+
     user = User.create!(
       nickname: params[:user][:nickname],
       email: "guestuser#{Random.rand(16)}@example.com",
