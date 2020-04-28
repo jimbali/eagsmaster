@@ -132,7 +132,7 @@
     <script>
       var data2 = <%= raw @progress_data.to_json %>;
       var autosaveNotification2;
-      var exampleConsole = document.getElementById('example-console2');
+      var exampleConsole2 = document.getElementById('example-console2');
       var container = document.getElementById('example2');
       var token = document.querySelector('meta[name="csrf-token"]').content;
       hot2 = new Handsontable(container, {
@@ -166,9 +166,9 @@
             return response.json();
           })
           .then((newData) => {
-            exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+            exampleConsole2.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
             autosaveNotification2 = setTimeout(function() {
-              exampleConsole.innerText ='Changes will be autosaved';
+              exampleConsole2.innerText ='Changes will be autosaved';
             }, 2000);
             data2 = newData;
             hot2.loadData(newData);
