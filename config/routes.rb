@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   root to: "quiz#index"
 
   resources :quiz do
-    get :progress, to: 'quiz#progress'
     post :update_progress, to: 'quiz#update_progress'
     post :add_guest, to: 'quiz#add_guest'
 

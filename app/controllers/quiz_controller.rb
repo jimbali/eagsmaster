@@ -43,13 +43,6 @@ class QuizController < ApplicationController
     redirect_to edit_quiz_url id: quiz.id
   end
 
-  def progress
-    @quiz = Quiz.find(params[:quiz_id])
-    @column_headers = column_headers
-    @column_data = column_data
-    @progress_data = progress_data
-  end
-
   def update_progress
     @quiz = Quiz.find(params[:quiz_id])
     row = params[:row]
