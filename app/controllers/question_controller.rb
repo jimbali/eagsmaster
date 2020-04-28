@@ -5,9 +5,7 @@ class QuestionController < ApplicationController
     return redirect_to current_question_url if @quiz.cursor != @question.id
 
     @question_user = question_user(@question.id)
-    @results = @quiz.players.map do |player|
-      QuestionUser.find_by(user: player)
-    end
+    @results = progress_data
 
     return render :answer_summary if @question.expired
 
