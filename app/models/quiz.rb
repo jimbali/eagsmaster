@@ -24,6 +24,7 @@ class Quiz < ApplicationRecord
   def results
     results = QuestionUser
       .joins(:user)
+      .where(question: [questions])
       .group(:user_id)
       .select(
         'question_users.*, users.nickname as team, SUM(points) as total_points'
