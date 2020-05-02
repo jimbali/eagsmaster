@@ -1,6 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Quiz do
+  describe 'validations' do
+    subject { create(:quiz, code: 'abcde') }
+
+    it { should validate_uniqueness_of(:code).case_insensitive }
+  end
+
+  describe 'callbacks' do
+    it 'converts the code to uppercase before save' do
+      quiz = create(:quiz, code: 'abcABC')
+      expect(quiz.code).to eq 'ABCABC'
+    end
+  end
+
   describe '.unique_code' do
     it 'is composed of capital letters' do
       expect(described_class.unique_code).to match /[A-Z]*/
