@@ -1,6 +1,6 @@
 class QuizController < ApplicationController
   def join
-    quiz = Quiz.find_by(code: params[:code])
+    quiz = Quiz.find_by(code: params[:code].upcase)
     if quiz.nil?
       flash[:error] = 'Quiz not found'
       return redirect_to root_url

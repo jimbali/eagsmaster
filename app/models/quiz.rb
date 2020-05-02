@@ -2,6 +2,10 @@ class Quiz < ApplicationRecord
   belongs_to :user
   has_many :questions
 
+  validates_uniqueness_of :code, case_sensitive: false
+
+  before_save :upcase_code
+
   class << self
     def unique_code
       code = nil
@@ -38,5 +42,11 @@ class Quiz < ApplicationRecord
 
   def points_for(user)
     responses.where(user: user).sum(:points)
+  end
+
+  private
+
+  def upcase_code
+    code.upcase!
   end
 end
