@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+version=$1
+
+if [[ "$1" == '' ]]
+  then
+    echo "Please supply a version number"
+    echo "Example:"
+    echo "dev/release 1.2.3"
+    exit 1
+fi
+
+docker build -t "eagsmaster:$version" . \
+  && docker tag "eagsmaster:$version" "gcr.io/$PROJECT_ID/eagsmaster:$version" \
+  && docker push "gcr.io/$PROJECT_ID/eagsmaster:$version" \
+  && helm upgrade eagsmaster ./k8s/eagsmaster --set "image.tag=$version"
