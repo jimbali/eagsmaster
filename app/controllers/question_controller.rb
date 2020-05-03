@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionController < ApplicationController
   def show
     @quiz = Quiz.find(params[:quiz_id])
@@ -63,7 +65,7 @@ class QuestionController < ApplicationController
   end
 
   def current_question_url
-    return quiz_url(@quiz.id) unless @quiz.cursor && @quiz.cursor > 0
+    return quiz_url(@quiz.id) unless @quiz.cursor&.positive?
 
     quiz_question_url(id: @quiz.cursor, quiz_id: @quiz.id)
   end

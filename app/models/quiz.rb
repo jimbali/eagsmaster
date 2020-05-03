@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Quiz < ApplicationRecord
   belongs_to :user
   has_many :questions
@@ -17,7 +19,7 @@ class Quiz < ApplicationRecord
     end
 
     def random_code
-      Array.new(5).map { |e| [*'A'..'Z'].sample }.join
+      Array.new(5).map { |_e| [*'A'..'Z'].sample }.join
     end
   end
 
@@ -26,7 +28,7 @@ class Quiz < ApplicationRecord
   end
 
   def results
-    results = QuestionUser
+    QuestionUser
       .joins(:user)
       .where(question: [questions])
       .group(:user_id)

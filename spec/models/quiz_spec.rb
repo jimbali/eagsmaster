@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Quiz do
   describe 'validations' do
     subject { create(:quiz, code: 'abcde') }
 
-    it { should validate_uniqueness_of(:code).case_insensitive }
+    it { is_expected.to validate_uniqueness_of(:code).case_insensitive }
   end
 
   describe 'callbacks' do
@@ -16,7 +18,7 @@ RSpec.describe Quiz do
 
   describe '.unique_code' do
     it 'is composed of capital letters' do
-      expect(described_class.unique_code).to match /[A-Z]*/
+      expect(described_class.unique_code).to match(/[A-Z]*/)
     end
 
     it 'is five characters long' do

@@ -1,7 +1,9 @@
-Rails.application.routes.draw do
-  devise_for :users, controllers: { registrations: "users/registrations" }
+# frozen_string_literal: true
 
-  root to: "quiz#index"
+Rails.application.routes.draw do
+  devise_for :users, controllers: { registrations: 'users/registrations' }
+
+  root to: 'quiz#index'
 
   resources :quiz do
     post :update_progress, to: 'quiz#update_progress'

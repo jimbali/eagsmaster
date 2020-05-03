@@ -1,0 +1,34 @@
+require: rubocop-rspec
+
+AllCops:
+  Exclude:
+    - bin/bundle
+    - bin/setup
+    - db/schema.rb
+    - node_modules/**/*
+
+Layout/LineLength:
+  Exclude:
+    - app/jobs/application_job.rb
+    - config/application.rb
+    - config/environments/development.rb
+    - config/environments/production.rb
+    - config/environments/test.rb
+    - config/initializers/backtrace_silencers.rb
+    - config/initializers/content_security_policy.rb
+    - config/initializers/devise.rb
+    - config/initializers/wrap_parameters.rb
+    - db/migrate/20200327152010_devise_create_users.rb
+    - Rakefile
+
+Metrics/BlockLength:
+  Exclude:
+    - config/environments/production.rb
+    - spec/**/*
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - app/controllers/users/*.rb
+
+Style/Documentation:
+  Enabled: false
