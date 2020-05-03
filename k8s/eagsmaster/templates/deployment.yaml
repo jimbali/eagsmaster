@@ -60,6 +60,8 @@ spec:
                   key: key
             - name: RAILS_SERVE_STATIC_FILES
               value: enabled
+            - name: SITE_HOSTNAME
+              value: egasmaster.jimba.li
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
