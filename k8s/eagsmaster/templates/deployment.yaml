@@ -42,6 +42,13 @@ spec:
                 secretKeyRef:
                   name: eagsmaster-db-creds
                   key: url
+            - name: MAIL_USERNAME
+              value: eagsmaster@gmail.com
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: eagsmaster-mail-creds
+                  key: password
             - name: RACK_ENV
               value: production
             - name: RAILS_LOG_TO_STDOUT
