@@ -33,6 +33,7 @@ end
 
 group :test do
   gem 'capybara', '>= 2.15'
+  gem 'rubocop-rails', '~> 2.5', require: false
   gem 'rubocop-rspec', '~> 1.39'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.3'

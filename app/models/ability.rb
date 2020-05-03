@@ -4,13 +4,13 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if user.present?
-      can :manage, Quiz, user_id: user.id
+    return if user.nil?
 
-      can :manage, Question, quiz: { user_id: user.id }
+    can :manage, Quiz, user_id: user.id
 
-      can :manage, QuestionUser, user_id: user.id
-      can :manage, QuestionUser, question: { quiz: { user_id: user.id } }
-    end
+    can :manage, Question, quiz: { user_id: user.id }
+
+    can :manage, QuestionUser, user_id: user.id
+    can :manage, QuestionUser, question: { quiz: { user_id: user.id } }
   end
 end

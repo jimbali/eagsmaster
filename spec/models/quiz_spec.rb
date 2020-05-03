@@ -18,7 +18,7 @@ RSpec.describe Quiz do
 
   describe '.unique_code' do
     it 'is composed of capital letters' do
-      expect(described_class.unique_code).to match /[A-Z]*/
+      expect(described_class.unique_code).to match(/[A-Z]*/)
     end
 
     it 'is five characters long' do
