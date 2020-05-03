@@ -1,12 +1,24 @@
-<h2>Find a quiz</h2>
-<%= form_with(url: '/join', method: 'get', local: true) do %>
-  <%= text_field_tag(:code, nil, placeholder: 'Quiz ID') %>
-  <%= submit_tag('Join') %>
-<% end %>
-<h2>Your quizzes</h2>
-<ul>
-<% current_user.quizzes.each do |quiz| %>
-  <li><%= link_to quiz.name, edit_quiz_url(quiz.id) %></li>
-<% end %>
-</ul>
-<%= link_to 'Create a quiz', new_quiz_url %>
+<div class="row">
+  <div class="col-12 mt-2">
+    <h2>Find a quiz</h2>
+    <%= form_with(url: '/join', method: 'get', local: true) do %>
+      <div class="form-group">
+        <%= text_field_tag :code, nil, placeholder: 'Quiz ID',
+                           class: 'form-control text-uppercase' %>
+      </div>
+      <%= submit_tag 'Join', class: 'btn btn-primary' %>
+    <% end %>
+    <div class="mt-4">
+      <h2>Your quizzes</h2>
+      <div class="list-group">
+      <% current_user.quizzes.each do |quiz| %>
+        <%= link_to quiz.name, edit_quiz_url(quiz.id),
+                    class: 'list-group-item list-group-item-action' %>
+      <% end %>
+      </div>
+    </div>
+    <div class="mt-4">
+      <%= link_to 'Create a quiz', new_quiz_url %>
+    </div>
+  </div>
+</div>
