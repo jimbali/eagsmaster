@@ -63,6 +63,8 @@ class QuestionController < ApplicationController
   end
 
   def current_question_url
+    return quiz_url(@quiz.id) unless @quiz.cursor && @quiz.cursor > 0
+
     quiz_question_url(id: @quiz.cursor, quiz_id: @quiz.id)
   end
 end
