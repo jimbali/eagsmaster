@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe QuizController do
   describe '#join' do
-    let!(:quiz) { create(:quiz, code: 'ABCABC' ) }
-
     subject { post :join, params: { code: 'abcABC' } }
+
+    let!(:quiz) { create(:quiz, code: 'ABCABC') }
 
     before { sign_in create(:user) }
 

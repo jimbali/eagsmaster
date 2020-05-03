@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Quiz do
   describe 'validations' do
     subject { create(:quiz, code: 'abcde') }
 
-    it { should validate_uniqueness_of(:code).case_insensitive }
+    it { is_expected.to validate_uniqueness_of(:code).case_insensitive }
   end
 
   describe 'callbacks' do

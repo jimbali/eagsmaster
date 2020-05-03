@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionController < ApplicationController
   def show
     @quiz = Quiz.find(params[:quiz_id])

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuizController < ApplicationController
   def join
     quiz = Quiz.find_by(code: params[:code].upcase)
