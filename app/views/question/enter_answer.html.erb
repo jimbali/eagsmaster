@@ -1,5 +1,8 @@
 <h2><%= @question.title %></h2>
 <%= form_with(url: quiz_question_url + '/submit_answer', method: 'post', local: true) do %>
-  <%= text_field_tag(:answer, nil, placeholder: 'Answer') %>
-  <%= submit_tag('Submit') %>
+  <div class="form-group">
+    <%= text_field_tag(:answer, nil, placeholder: 'Answer',
+                       class: 'form-control') %>
+  </div>
+  <%= submit_tag('Submit', class: 'btn btn-primary') %>
 <% end %>
