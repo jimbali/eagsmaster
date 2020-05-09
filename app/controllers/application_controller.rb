@@ -8,8 +8,10 @@ class ApplicationController < ActionController::Base
   def progress_data
     rank = 1
     points_memo = nil
+    results = @quiz.results
+    questions = @quiz.questions.includes(:question_users)
 
-    @quiz.results.map.with_index(1) do |result, i|
+    results.map.with_index(1) do |result, i|
       rank = i if points_memo && result.total_points < points_memo
       points_memo = result.total_points
 
@@ -19,10 +21,10 @@ class ApplicationController < ActionController::Base
         team: result.team,
         totalPoints: result.total_points
       }.tap do |data|
-        @quiz.questions.each do |question|
-          question_user = QuestionUser.find_by(
-            question: question, user: result.user
-          )
+        questions.each do |question|
+          question_user = question.question_users.find do |r|
+            r.user_id == result.user_id
+          end
           tag = "question#{question.id}"
           data["#{tag}Answer"] = question_user&.answer
           data["#{tag}Points"] = question_user&.points
