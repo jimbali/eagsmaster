@@ -10,7 +10,10 @@ if [[ "$1" == '' ]]
     exit 1
 fi
 
+project_id="$(gcloud config get-value project -q)"
+
 docker build -t "eagsmaster:$version" . \
-  && docker tag "eagsmaster:$version" "gcr.io/$PROJECT_ID/eagsmaster:$version" \
-  && docker push "gcr.io/$PROJECT_ID/eagsmaster:$version" \
-  && helm upgrade eagsmaster ./k8s/eagsmaster --set "image.tag=$version"
+  && docker tag "eagsmaster:$version" "gcr.io/$project_id/eagsmaster:$version" \
+  && docker push "gcr.io/$project_id/eagsmaster:$version" \
+  && helm upgrade eagsmaster ./k8s/eagsmaster --set "image.tag=$version" \
+  && git tag "$version"
