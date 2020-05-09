@@ -15,21 +15,33 @@ class ApplicationController < ActionController::Base
       rank = i if points_memo && result.total_points < points_memo
       points_memo = result.total_points
 
-      {
-        playerId: result.user_id,
-        rank: rank,
-        team: result.team,
-        totalPoints: result.total_points
-      }.tap do |data|
-        questions.each do |question|
-          question_user = question.question_users.find do |r|
-            r.user_id == result.user_id
-          end
-          tag = "question#{question.id}"
-          data["#{tag}Answer"] = question_user&.answer
-          data["#{tag}Points"] = question_user&.points
-        end
+      result_fields(result, rank, questions)
+    end
+  end
+
+  def result_fields(result, rank, questions)
+    static_fields(result, rank).tap do |data|
+      add_question_fields(questions, result, data)
+    end
+  end
+
+  def static_fields(result, rank)
+    {
+      playerId: result.user_id,
+      rank: rank,
+      team: result.team,
+      totalPoints: result.total_points
+    }
+  end
+
+  def add_question_fields(questions, result, data)
+    questions.each do |question|
+      question_user = question.question_users.find do |r|
+        r.user_id == result.user_id
       end
+      tag = "question#{question.id}"
+      data["#{tag}Answer"] = question_user&.answer
+      data["#{tag}Points"] = question_user&.points
     end
   end
 end
