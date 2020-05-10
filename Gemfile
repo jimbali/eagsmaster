@@ -37,6 +37,7 @@ group :test do
   gem 'rubocop-rspec', '~> 1.39'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.3'
+  gem 'simplecov', '~> 0.18', require: false
   gem 'webdrivers'
 end
 

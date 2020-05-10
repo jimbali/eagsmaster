@@ -23,10 +23,6 @@ class Quiz < ApplicationRecord
     end
   end
 
-  def responses
-    QuestionUser.where(question: [questions])
-  end
-
   def results
     QuestionUser
       .joins(:user)
@@ -36,14 +32,6 @@ class Quiz < ApplicationRecord
         'question_users.*, users.nickname as team, SUM(points) as total_points'
       )
       .order(total_points: :desc)
-  end
-
-  def players
-    results.map(&:user)
-  end
-
-  def points_for(user)
-    responses.where(user: user).sum(:points)
   end
 
   private

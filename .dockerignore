@@ -22,3 +22,4 @@ config/master.key
 yarn.lock
 npm-debug.log
 spec/examples.txt
+/coverage
