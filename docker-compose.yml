@@ -30,6 +30,8 @@ services:
     environment:
       DATABASE_URL: mysql2://root:livSbI9IIoawmhk5@db/eagsmaster_test
       RACK_ENV: test
+    volumes:
+      - ./:/app/:rw
   db:
     environment:
       MYSQL_ROOT_PASSWORD: livSbI9IIoawmhk5
