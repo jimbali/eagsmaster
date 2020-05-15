@@ -27,10 +27,10 @@ class ApplicationController < ActionController::Base
 
   def static_fields(result, rank)
     {
-      playerId: result.user_id,
-      rank: rank,
-      team: result.team,
-      totalPoints: result.total_points
+      'playerId' => result.user_id,
+      'rank' => rank,
+      'team' => result.team,
+      'totalPoints' => result.total_points
     }
   end
 
