@@ -34,3 +34,62 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+RSpec.shared_context 'existing quiz' do
+  let!(:quiz) { create(:quiz) }
+  let!(:questions) { create_list(:question, 3, quiz: quiz) }
+  let!(:players) { create_list(:user, 3) }
+  let!(:answers) { Array.new(9) { |_i| Faker::Books::Dune.character } }
+
+  let(:progress_data) do
+    [
+      {
+        'playerId' => players.third.id,
+        "question#{questions.first.id}Answer" => answers[6],
+        "question#{questions.first.id}Points" => 6,
+        "question#{questions.second.id}Answer" => answers[7],
+        "question#{questions.second.id}Points" => 7,
+        "question#{questions.third.id}Answer" => answers[8],
+        "question#{questions.third.id}Points" => 8,
+        'rank' => 1,
+        'team' => players.third.nickname,
+        'totalPoints' => 21
+      },
+      {
+        'playerId' => players.second.id,
+        "question#{questions.first.id}Answer" => answers[3],
+        "question#{questions.first.id}Points" => 3,
+        "question#{questions.second.id}Answer" => answers[4],
+        "question#{questions.second.id}Points" => 4,
+        "question#{questions.third.id}Answer" => answers[5],
+        "question#{questions.third.id}Points" => 5,
+        'rank' => 2,
+        'team' => players.second.nickname,
+        'totalPoints' => 12
+      },
+      {
+        'playerId' => players.first.id,
+        "question#{questions.first.id}Answer" => answers[0],
+        "question#{questions.first.id}Points" => 0,
+        "question#{questions.second.id}Answer" => answers[1],
+        "question#{questions.second.id}Points" => 1,
+        "question#{questions.third.id}Answer" => answers[2],
+        "question#{questions.third.id}Points" => 2,
+        'rank' => 3,
+        'team' => players.first.nickname,
+        'totalPoints' => 3
+      }
+    ]
+  end
+
+  before do
+    i = 0
+    players.each do |player|
+      questions.each do |question|
+        create(:question_user, question: question, user: player, points: i,
+                               answer: answers[i])
+        i += 1
+      end
+    end
+  end
+end

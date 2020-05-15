@@ -69,7 +69,7 @@ class QuizController < ApplicationController
 
   def add_guest
     @quiz = Quiz.find(params[:quiz_id])
-    authorize! :update, quiz
+    authorize! :update, @quiz
 
     user = User.create!(
       nickname: params[:user][:nickname],
