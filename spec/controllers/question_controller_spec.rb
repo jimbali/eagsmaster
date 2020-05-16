@@ -9,15 +9,15 @@ RSpec.describe QuestionController do
   let(:question) { questions.first }
 
   describe '#show' do
+    subject(:show) do
+      get :show, params: { id: question.id, quiz_id: quiz.id }
+    end
+
     let(:question_user) do
       QuestionUser.find_by(question_id: question.id, user_id: players.first)
     end
 
     let(:player) { players.first }
-
-    subject(:show) do
-      get :show, params: { id: question.id, quiz_id: quiz.id }
-    end
 
     before do
       sign_in player
@@ -94,9 +94,9 @@ RSpec.describe QuestionController do
     end
 
     context 'when the QuestionUser already exists' do
-      let(:player) { players.first }
-
       subject(:submit_answer) { post :submit_answer, params: params }
+
+      let(:player) { players.first }
 
       it 'sets the answer' do
         submit_answer
@@ -136,14 +136,14 @@ RSpec.describe QuestionController do
   end
 
   describe '#create' do
-    let(:title) { 'Fastest trains in the world' }
-
     subject(:create_action) do
       post :create, params: {
         quiz_id: quiz.id,
         question: { title: title }
       }
     end
+
+    let(:title) { 'Fastest trains in the world' }
 
     before { sign_in quiz.user }
 
