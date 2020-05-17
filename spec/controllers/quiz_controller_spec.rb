@@ -16,7 +16,7 @@ RSpec.describe QuizController do
   end
 
   describe '#add_guest' do
-    include_context 'existing quiz'
+    include_context 'with existing quiz'
 
     let(:name) { 'Bob' }
     let(:created_user) { User.find_by(nickname: name) }

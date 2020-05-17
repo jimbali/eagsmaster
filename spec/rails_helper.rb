@@ -35,7 +35,7 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-RSpec.shared_context 'existing quiz' do
+RSpec.shared_context 'with existing quiz' do
   let!(:quiz) { create(:quiz) }
   let!(:questions) { create_list(:question, 3, quiz: quiz) }
   let!(:players) { create_list(:user, 3) }

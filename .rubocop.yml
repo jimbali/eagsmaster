@@ -26,6 +26,9 @@ Metrics/BlockLength:
     - config/environments/production.rb
     - spec/**/*
 
+RSpec/NestedGroups:
+  Max: 4
+
 Style/ClassAndModuleChildren:
   Exclude:
     - app/controllers/users/*.rb

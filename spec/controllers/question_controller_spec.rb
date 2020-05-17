@@ -4,7 +4,7 @@ require 'rails_helper'
 require_relative '../support/matchers/exceed_query_limit'
 
 RSpec.describe QuestionController do
-  include_context 'existing quiz'
+  include_context 'with existing quiz'
 
   let(:question) { questions.first }
 
@@ -149,7 +149,7 @@ RSpec.describe QuestionController do
 
     it 'creates the question' do
       create_action
-      expect(quiz.questions.find_by(title: title)).to be
+      expect(quiz.questions.find_by(title: title)).to be_truthy
     end
 
     it 'redirects to the edit page' do
