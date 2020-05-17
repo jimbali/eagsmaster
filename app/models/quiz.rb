@@ -34,6 +34,10 @@ class Quiz < ApplicationRecord
       .order(total_points: :desc)
   end
 
+  def answer_formatter
+    @answer_formatter ||= AnswerFormatter.new(:upcase_first)
+  end
+
   private
 
   def upcase_code
