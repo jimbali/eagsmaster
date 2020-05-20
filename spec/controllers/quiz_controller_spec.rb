@@ -57,6 +57,39 @@ RSpec.describe QuizController do
     end
   end
 
+  describe '#new' do
+    before do
+      sign_in create(:user)
+      get :new
+    end
+
+    it 'renders the new quiz page' do
+      is_expected.to render_template(:new)
+    end
+  end
+
+  describe '#create' do
+    subject(:create_action) do
+      post :create, params: { quiz: { name: name, code: code } }
+    end
+
+    let(:name) { 'Jimbaliquiz' }
+    let(:code) { 'JIMBLES' }
+    let(:user) { create(:user) }
+    let(:quiz) { Quiz.find_by(name: name, code: code, user: user) }
+
+    before { sign_in user }
+
+    it 'creates the quiz' do
+      create_action
+      expect(quiz).to be_truthy
+    end
+
+    it 'redirects to edit_quiz_url(id: quiz.id)' do
+      expect(create_action).to redirect_to edit_quiz_url(id: quiz.id)
+    end
+  end
+
   describe '#add_guest' do
     include_context 'with existing quiz'
 
