@@ -4,7 +4,9 @@ require 'rails_helper'
 
 RSpec.describe QuizController do
   describe '#join' do
-    subject(:join) { post :join, params: { code: 'abcABC' } }
+    let(:code) { 'abcABC' }
+
+    subject(:join) { post :join, params: { code: code } }
 
     let!(:quiz) { create(:quiz, code: 'ABCABC') }
 
@@ -12,6 +14,46 @@ RSpec.describe QuizController do
 
     it 'redirects to quiz_url(quiz.id)' do
       expect(join).to redirect_to(quiz_url(quiz.id))
+    end
+
+    context 'when the quiz cannot be found' do
+      let(:code) { 'bleurgh' }
+
+      it 'redirects to root_url' do
+        expect(join).to redirect_to(root_url)
+      end
+
+      it 'sets the flash message' do
+        join
+        expect(controller).to set_flash[:error].to('Quiz not found')
+      end
+    end
+  end
+
+  describe '#show' do
+    include_context 'with existing quiz'
+
+    subject(:show) { get :show, params: { id: quiz.id } }
+
+    before { sign_in quiz.user }
+
+    it 'renders the waiting template' do
+      expect(show).to render_template(:waiting)
+    end
+
+    context 'when a question is active' do
+      let(:question) { quiz.questions.first }
+
+      before do
+        quiz.cursor = question.id
+        quiz.save!
+      end
+
+      it 'redirects to the question' do
+        expect(show).to redirect_to(
+          quiz_question_url(quiz_id: quiz.id, id: question.id)
+        )
+      end
     end
   end
 
