@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12 mt-2">
     <h2>Edit quiz</h2>
-    <%= form_for @quiz, url: quiz_url, id: @quiz.id do |f| %>
+    <%= form_for @quiz, url: quiz_url(id: @quiz.id) do |f| %>
       <div class="form-group">
         <%= f.label :name, 'Name' %>
         <%= f.text_field :name, class: 'form-control' %>

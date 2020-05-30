@@ -90,6 +90,19 @@ RSpec.describe QuizController do
     end
   end
 
+  describe '#edit_quiz' do
+    let(:quiz) { create(:quiz) }
+
+    before do
+      sign_in quiz.user
+      get :edit, params: { id: quiz.id }
+    end
+
+    it 'renders the edit quiz page' do
+      is_expected.to render_template(:edit)
+    end
+  end
+
   describe '#add_guest' do
     include_context 'with existing quiz'
 
