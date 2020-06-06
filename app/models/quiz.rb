@@ -29,7 +29,8 @@ class Quiz < ApplicationRecord
       .where(question: [questions])
       .group(:user_id)
       .select(
-        'question_users.*, users.nickname as team, SUM(points) as total_points'
+        'question_users.*, users.nickname as team, ' \
+        'IFNULL(SUM(points), 0) as total_points'
       )
       .order(total_points: :desc)
   end

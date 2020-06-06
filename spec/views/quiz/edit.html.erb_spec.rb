@@ -8,6 +8,6 @@ RSpec.describe 'quiz/edit.html.erb' do
   it 'renders the quiz name' do
     assign :quiz, quiz
     render
-    expect(rendered).to match /My Quiz/
+    expect(rendered).to match(/My Quiz/)
   end
 end
