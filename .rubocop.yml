@@ -20,6 +20,7 @@ Layout/LineLength:
     - config/initializers/wrap_parameters.rb
     - db/migrate/20200327152010_devise_create_users.rb
     - Rakefile
+  Max: 80
 
 Metrics/BlockLength:
   Exclude:
@@ -38,3 +39,31 @@ Style/ClassAndModuleChildren:
 
 Style/Documentation:
   Enabled: false
+
+# Pending cops
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+Lint/RaiseException:
+  Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
+Style/ExponentialNotation:
+  Enabled: true
+Style/HashEachMethods:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
+Style/SlicingWithRange:
+  Enabled: true

@@ -9,21 +9,16 @@ class QuestionController < ApplicationController
     @question_user = question_user(@question.id)
     @results = progress_data
 
-    return render :answer_summary if @question.expired
-
-    return render :enter_answer if @question_user.answer.nil?
-
-    render :waiting
+    render_question
   end
 
   def submit_answer
-    @question_user = question_user(params[:question_id])
-    authorize! :update, @question_user
+    question_user = question_user(params[:question_id])
+    authorize! :update, question_user
 
-    return head :bad_request if @question_user.question.expired
+    return head :bad_request if question_user.question.expired
 
-    @question_user.answer = params[:answer]
-    @question_user.save!
+    update_answer(question_user)
 
     redirect_to quiz_question_url(
       id: params[:question_id], quiz_id: params[:quiz_id]
@@ -56,6 +51,19 @@ class QuestionController < ApplicationController
   end
 
   private
+
+  def render_question
+    return render :answer_summary if @question.expired
+
+    return render :enter_answer if @question_user.answer.nil?
+
+    render :waiting
+  end
+
+  def update_answer(question_user)
+    question_user.answer = params[:answer]
+    question_user.save!
+  end
 
   def question_user(question_id)
     QuestionUser.find_or_create_by(

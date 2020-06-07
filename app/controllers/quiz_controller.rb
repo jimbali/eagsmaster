@@ -53,16 +53,7 @@ class QuizController < ApplicationController
     authorize! :update, @quiz
 
     row = params[:row]
-    user_id = row[:playerId]
-
-    @quiz.questions.each do |question|
-      question_user = QuestionUser.find_or_create_by!(
-        question_id: question.id, user_id: user_id
-      )
-      question_user.answer = row["question#{question.id}Answer"]
-      question_user.points = row["question#{question.id}Points"]
-      question_user.save!
-    end
+    update_questions(row)
 
     render json: progress_data
   end
@@ -71,12 +62,7 @@ class QuizController < ApplicationController
     @quiz = Quiz.find(params[:quiz_id])
     authorize! :update, @quiz
 
-    user = User.create!(
-      nickname: params[:user][:nickname],
-      email: "guestuser#{Random.rand(16)}@example.com",
-      password: SecureRandom.alphanumeric(16),
-      guest: true
-    )
+    user = create_guest_user
     QuestionUser.create!(
       question: @quiz.questions.first,
       user: user
@@ -87,6 +73,28 @@ class QuizController < ApplicationController
 
   private
 
+  def create_guest_user
+    User.create!(
+      nickname: params[:user][:nickname],
+      email: "guestuser#{Random.rand(16)}@example.com",
+      password: SecureRandom.alphanumeric(16),
+      guest: true
+    )
+  end
+
+  def update_questions(row)
+    user_id = row[:playerId]
+
+    @quiz.questions.each do |question|
+      question_user = QuestionUser.find_or_create_by!(
+        question_id: question.id, user_id: user_id
+      )
+      question_user.answer = row["question#{question.id}Answer"]
+      question_user.points = row["question#{question.id}Points"]
+      question_user.save!
+    end
+  end
+
   def column_headers
     ['Rank', 'Team', 'Total Points'] + @quiz.questions.flat_map do |question|
       [question.title, 'Points']
@@ -94,11 +102,7 @@ class QuizController < ApplicationController
   end
 
   def column_data
-    cols = [
-      { data: 'rank' },
-      { data: 'team' },
-      { data: 'totalPoints' }
-    ]
+    cols = [{ data: 'rank' }, { data: 'team' }, { data: 'totalPoints' }]
 
     @quiz.questions.each do |question|
       tag = "question#{question.id}"
