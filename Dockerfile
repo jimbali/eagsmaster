@@ -1,4 +1,4 @@
-FROM ruby:2.7.0-alpine
+FROM ruby:2.7.1-alpine
 
 RUN apk add --no-cache --update build-base \
                                 linux-headers \
@@ -13,6 +13,7 @@ RUN gem install bundler
 
 WORKDIR /app
 
+COPY .ruby-version ./
 COPY Gemfile* ./
 
 RUN bundle install
