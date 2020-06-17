@@ -54,38 +54,38 @@ RSpec.shared_context 'with existing quiz' do
       {
         'playerId' => players.third.id,
         "question#{questions.first.id}Answer" => answers[6],
-        "question#{questions.first.id}Points" => 6,
+        "question#{questions.first.id}Points" => '6',
         "question#{questions.second.id}Answer" => answers[7],
-        "question#{questions.second.id}Points" => 7,
+        "question#{questions.second.id}Points" => '7',
         "question#{questions.third.id}Answer" => answers[8],
-        "question#{questions.third.id}Points" => 8,
+        "question#{questions.third.id}Points" => '8',
         'rank' => 1,
         'team' => players.third.nickname,
-        'totalPoints' => 21
+        'totalPoints' => '21'
       },
       {
         'playerId' => players.second.id,
         "question#{questions.first.id}Answer" => answers[3],
-        "question#{questions.first.id}Points" => 3,
+        "question#{questions.first.id}Points" => '3',
         "question#{questions.second.id}Answer" => answers[4],
-        "question#{questions.second.id}Points" => 4,
+        "question#{questions.second.id}Points" => '4',
         "question#{questions.third.id}Answer" => answers[5],
-        "question#{questions.third.id}Points" => 5,
+        "question#{questions.third.id}Points" => '5',
         'rank' => 2,
         'team' => players.second.nickname,
-        'totalPoints' => 12
+        'totalPoints' => '12'
       },
       {
         'playerId' => players.first.id,
         "question#{questions.first.id}Answer" => answers[0],
-        "question#{questions.first.id}Points" => 0,
+        "question#{questions.first.id}Points" => '0',
         "question#{questions.second.id}Answer" => answers[1],
-        "question#{questions.second.id}Points" => 1,
+        "question#{questions.second.id}Points" => '1',
         "question#{questions.third.id}Answer" => answers[2],
-        "question#{questions.third.id}Points" => 2,
+        "question#{questions.third.id}Points" => '2',
         'rank' => 3,
         'team' => players.first.nickname,
-        'totalPoints' => 3
+        'totalPoints' => '3'
       }
     ]
   end
