@@ -170,7 +170,7 @@ RSpec.describe QuizController do
         team: 'Jiminy Jillikers',
         totalPoints: 0,
         "question#{questions.first.id}Answer" => 'Yekaterinburg',
-        "question#{questions.first.id}Points" => 8,
+        "question#{questions.first.id}Points" => 8.2,
         "question#{questions.second.id}Answer" => 'Novgorod',
         "question#{questions.second.id}Points" => nil,
         "question#{questions.third.id}Answer" => 'St. Petersburg',
@@ -181,12 +181,12 @@ RSpec.describe QuizController do
     let(:updated_progress_data) do
       progress_data.dup.tap do |data|
         data.third["question#{questions.first.id}Answer"] = 'Yekaterinburg'
-        data.third["question#{questions.first.id}Points"] = 8
+        data.third["question#{questions.first.id}Points"] = '8.2'
         data.third["question#{questions.second.id}Answer"] = 'Novgorod'
         data.third["question#{questions.second.id}Points"] = nil
         data.third["question#{questions.third.id}Answer"] = 'St. Petersburg'
-        data.third["question#{questions.third.id}Points"] = 0
-        data.third['totalPoints'] = 8
+        data.third["question#{questions.third.id}Points"] = '0'
+        data.third['totalPoints'] = '8.2'
       end
     end
 
@@ -200,7 +200,7 @@ RSpec.describe QuizController do
     end
 
     it 'updates the points for the first answer' do
-      expect(player.question_users.first.points).to eq(8)
+      expect(player.question_users.first.points).to eq(BigDecimal('8.2'))
     end
 
     it 'updates the second answer' do
@@ -234,14 +234,14 @@ RSpec.describe QuizController do
       {
         'playerId' => created_user.id,
         "question#{questions.first.id}Answer" => nil,
-        "question#{questions.first.id}Points" => 0,
+        "question#{questions.first.id}Points" => '0',
         "question#{questions.second.id}Answer" => nil,
         "question#{questions.second.id}Points" => nil,
         "question#{questions.third.id}Answer" => nil,
         "question#{questions.third.id}Points" => nil,
         'rank' => 4,
         'team' => name,
-        'totalPoints' => 0
+        'totalPoints' => '0'
       }
     end
 
