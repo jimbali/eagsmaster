@@ -31,26 +31,22 @@
 <div class="row mt-4">
   <div class="col-12">
     <h3>Questions</h3>
-    <p id="example-console">Changes will be autosaved</p>
-    <div id="example"></div>
+    <p id="questions-console">Changes will be autosaved</p>
+    <%=
+      tag(
+        :div, id: 'questions-root',
+        'data-quiz-json': @questions_data.to_json,
+        'data-base-url': quiz_question_index_url(quiz_id: @quiz.id)
+      )
+    %>
     <script>
-      var data = <%=
-        raw(
-          @quiz.questions.map do |question|
-            {
-              id: question.id,
-              title: question.title,
-              expired: question.expired
-            }
-          end.to_json
-        )
-      %>;
-
       var autosaveNotification;
-      var exampleConsole = document.getElementById('example-console');
-      var container = document.getElementById('example');
+      var questionsConsole = document.getElementById('questions-console');
+      var questionsContainer = document.getElementById('questions-root');
+      var data = JSON.parse(questionsContainer.dataset.quizJson);
       var token = document.querySelector('meta[name="csrf-token"]').content;
-      var hot = new Handsontable(container, {
+      var baseUrl = questionsContainer.dataset.baseUrl;
+      var hot = new Handsontable(questionsContainer, {
         data: data,
         rowHeaders: false,
         colHeaders: ['Title', 'Finished answering?'],
@@ -72,7 +68,7 @@
           questionId = row['id'];
           console.log(questionId);
           fetch(
-            '<%= quiz_question_index_url(quiz_id: @quiz.id) %>' + '/' + questionId,
+            baseUrl + '/' + questionId,
             {
               method: 'PATCH',
               headers: {
@@ -88,18 +84,18 @@
             return response.json();
           })
           .then((data) => {
-            exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+            questionsConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
             autosaveNotification = setTimeout(function() {
-              exampleConsole.innerText ='Changes will be autosaved';
+              questionsConsole.innerText ='Changes will be autosaved';
             }, 2000);
           });
         },
         beforeRemoveRow: function(index, amount, physicalRows, source) {
           for(var i = 0; i < physicalRows.length; i++) {
             index = physicalRows[i];
-            id = data[index][0];
+            id = data[index].id;
             fetch(
-              '<%= quiz_question_index_url(quiz_id: @quiz.id) %>' + '/' + id,
+              baseUrl + '/' + id,
               {
                 method: 'DELETE',
                 headers: {
@@ -109,9 +105,9 @@
               }
             )
             .then((response) => {
-              exampleConsole.innerText  = 'Autosaved (row deleted)';
+              questionsConsole.innerText  = 'Autosaved (row deleted)';
               autosaveNotification = setTimeout(function() {
-                exampleConsole.innerText ='Changes will be autosaved';
+                questionsConsole.innerText ='Changes will be autosaved';
               }, 2000);
             });
           }
@@ -127,19 +123,29 @@
 <div class="row mt-4">
   <div class="col-12">
     <h3>Answers</h3>
-    <p id="example-console2">Changes will be autosaved</p>
-    <div id="example2"></div>
+    <p id="quiz-console">Changes will be autosaved</p>
+    <%=
+      tag(
+        :div, id: 'quiz-root',
+        'data-progress-json': @progress_data.to_json,
+        'data-base-url': quiz_question_index_url(quiz_id: @quiz.id),
+        'data-column-headers': @column_headers.to_json,
+        'data-column-data': @column_data.to_json,
+        'data-update-progress-url': quiz_update_progress_url(quiz_id: @quiz.id)
+      )
+    %>
     <script>
-      var data2 = <%= raw @progress_data.to_json %>;
+      var quizConsole = document.getElementById('quiz-console');
+      var quizContainer = document.getElementById('quiz-root');
+      var data2 = JSON.parse(quizContainer.dataset.progressJson);
       var autosaveNotification2;
-      var exampleConsole2 = document.getElementById('example-console2');
-      var container = document.getElementById('example2');
       var token = document.querySelector('meta[name="csrf-token"]').content;
-      hot2 = new Handsontable(container, {
+      var updateProgressUrl = quizContainer.dataset.updateProgressUrl;
+      hot2 = new Handsontable(quizContainer, {
         data: data2,
         rowHeaders: false,
-        colHeaders: <%= raw @column_headers.to_json %>,
-        columns: <%= raw @column_data.to_json %>,
+        colHeaders: JSON.parse(quizContainer.dataset.columnHeaders),
+        columns: JSON.parse(quizContainer.dataset.columnData),
         filters: true,
         dropdownMenu: true,
         licenseKey: 'non-commercial-and-evaluation',
@@ -153,7 +159,7 @@
           var row = data2[change[0][0]];
 
           fetch(
-            '<%= quiz_update_progress_url(quiz_id: @quiz.id) %>',
+            updateProgressUrl,
             {
               method: 'POST',
               headers: {
@@ -167,9 +173,9 @@
             return response.json();
           })
           .then((newData) => {
-            exampleConsole2.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+            quizConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
             autosaveNotification2 = setTimeout(function() {
-              exampleConsole2.innerText ='Changes will be autosaved';
+              quizConsole.innerText ='Changes will be autosaved';
             }, 2000);
             data2 = newData;
             hot2.loadData(newData);

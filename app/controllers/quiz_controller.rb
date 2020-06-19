@@ -38,6 +38,7 @@ class QuizController < ApplicationController
     @column_headers = column_headers
     @column_data = column_data
     @progress_data = progress_data
+    @questions_data = questions_data
   end
 
   def update
@@ -111,5 +112,15 @@ class QuizController < ApplicationController
     end
 
     cols << { data: 'totalPoints' }
+  end
+
+  def questions_data
+    @quiz.questions.map do |question|
+      {
+        id: question.id,
+        title: question.title,
+        expired: question.expired
+      }
+    end
   end
 end
