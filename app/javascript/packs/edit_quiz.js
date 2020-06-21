@@ -1,3 +1,5 @@
+import Handsontable from 'handsontable'
+
 const afterChange = (change, source) => {
   if (source === 'loadData') return
 
@@ -35,7 +37,7 @@ let data = JSON.parse(quizContainer.dataset.progressJson)
 let autosaveNotification
 const token = document.querySelector('meta[name="csrf-token"]').content
 const updateProgressUrl = quizContainer.dataset.updateProgressUrl
-hot = new Handsontable(quizContainer, {
+const hot = new Handsontable(quizContainer, {
   data: data,
   rowHeaders: false,
   colHeaders: JSON.parse(quizContainer.dataset.columnHeaders),

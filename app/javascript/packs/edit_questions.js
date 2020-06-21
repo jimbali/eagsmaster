@@ -1,3 +1,5 @@
+import Handsontable from 'handsontable'
+
 const afterChange = (change, source) => {
   if (source === 'loadData') return
 
