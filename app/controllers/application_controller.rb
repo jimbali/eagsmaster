@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
       'playerId' => result.user_id,
       'rank' => rank,
       'team' => result.team,
-      'totalPoints' => "%g" % result.total_points
+      'totalPoints' => format('%<total>g', total: result.total_points)
     }
   end
 
@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
       tag = "question#{question.id}"
       data["#{tag}Answer"] = question_user&.answer
       points = question_user&.points
-      data["#{tag}Points"] = points && "%g" % points
+      data["#{tag}Points"] = points && format('%<points>g', points: points)
     end
   end
 end
