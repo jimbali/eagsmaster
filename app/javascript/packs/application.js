@@ -16,13 +16,6 @@ require('channels')
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-global.toastr = require('toastr')
-import Handsontable from 'handsontable'
-global.Handsontable = Handsontable
-global.$ = require('jquery')
-
 import '../stylesheets/application'
 
 import 'bootstrap'
-
-export { Handsontable }

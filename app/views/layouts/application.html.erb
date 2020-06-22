@@ -22,20 +22,13 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application' %>
+    <%= javascript_pack_tag 'flash' %>
   </head>
 
-  <body>
-    <% unless flash.empty? %>
-      <script type="text/javascript">
-        <% flash.each do |f| %>
-      <% type = f[0].to_s.gsub('alert', 'error').gsub('notice', 'info') %>
-      	 toastr['<%= type %>']('<%= f[1] %>');
-      <% end %>
-      </script>
-    <% end %>
+  <%= tag.body 'data-flash': flash.to_json do %>
     <%= render 'navbar' %>
     <div class='container mt-4'>
       <%= yield %>
     </div>
-  </body>
+  <% end %>
 </html>
