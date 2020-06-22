@@ -1,7 +1,7 @@
 const toastr = require('toastr')
 
 const showFlash = () => {
-  const flash = JSON.parse(document.body.dataset.flash)
+  const flash = $('body').data('flash')
 
   flash.forEach((f) => {
     const type = f[0].replace('alert', 'error').replace('notice', 'info')

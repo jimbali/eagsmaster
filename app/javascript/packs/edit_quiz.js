@@ -22,26 +22,29 @@ const afterChange = (change, source) => {
     return response.json()
   })
   .then((newData) => {
-    quizConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')'
+    quizConsole.text(
+      'Autosaved (' + change.length + ' ' + 'cell' +
+        (change.length > 1 ? 's' : '') + ')'
+    )
     autosaveNotification = setTimeout(function() {
-      quizConsole.innerText = 'Changes will be autosaved'
+      quizConsole.text('Changes will be autosaved')
     }, 2000)
     data = newData
     hot.loadData(newData)
   })
 }
 
-const quizConsole = document.getElementById('quiz-console')
-const quizContainer = document.getElementById('quiz-root')
-let data = JSON.parse(quizContainer.dataset.progressJson)
+const quizConsole = $('#quiz-console')
+const quizContainer = $('#quiz-root')
+let data = quizContainer.data('progressJson')
 let autosaveNotification
-const token = document.querySelector('meta[name="csrf-token"]').content
-const updateProgressUrl = quizContainer.dataset.updateProgressUrl
-const hot = new Handsontable(quizContainer, {
+const token = $('meta[name="csrf-token"]').attr('content')
+const updateProgressUrl = quizContainer.data('updateProgressUrl')
+const hot = new Handsontable(quizContainer[0], {
   data: data,
   rowHeaders: false,
-  colHeaders: JSON.parse(quizContainer.dataset.columnHeaders),
-  columns: JSON.parse(quizContainer.dataset.columnData),
+  colHeaders: quizContainer.data('columnHeaders'),
+  columns: quizContainer.data('columnData'),
   filters: true,
   dropdownMenu: true,
   licenseKey: 'non-commercial-and-evaluation',

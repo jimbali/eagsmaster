@@ -26,9 +26,12 @@ const afterChange = (change, source) => {
     return response.json()
   })
   .then((data) => {
-    questionsConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')'
+    questionsConsole.text(
+      'Autosaved (' + change.length + ' ' + 'cell' +
+        (change.length > 1 ? 's' : '') + ')'
+    )
     autosaveNotification = setTimeout(function() {
-      questionsConsole.innerText = 'Changes will be autosaved'
+      questionsConsole.text('Changes will be autosaved')
     }, 2000)
   })
 }
@@ -37,7 +40,7 @@ const beforeRemoveRow = (index, amount, physicalRows, source) => {
   for(let i = 0; i < physicalRows.length; i++) {
     const index = physicalRows[i]
     const id = data[index].id
-    
+
     fetch(
       baseUrl + '/' + id,
       {
@@ -49,21 +52,21 @@ const beforeRemoveRow = (index, amount, physicalRows, source) => {
       }
     )
     .then((response) => {
-      questionsConsole.innerText = 'Autosaved (row deleted)'
+      questionsConsole.text('Autosaved (row deleted)')
       autosaveNotification = setTimeout(function() {
-        questionsConsole.innerText = 'Changes will be autosaved'
+        questionsConsole.text('Changes will be autosaved')
       }, 2000)
     })
   }
 }
 
 let autosaveNotification
-const questionsConsole = document.getElementById('questions-console')
-const questionsContainer = document.getElementById('questions-root')
-const data = JSON.parse(questionsContainer.dataset.quizJson)
-const token = document.querySelector('meta[name="csrf-token"]').content
-const baseUrl = questionsContainer.dataset.baseUrl
-const hot = new Handsontable(questionsContainer, {
+const questionsConsole = $('#questions-console')
+const questionsContainer = $('#questions-root')
+const data = questionsContainer.data('quizJson')
+const token = $('meta[name="csrf-token"]').attr('content')
+const baseUrl = questionsContainer.data('baseUrl')
+const hot = new Handsontable(questionsContainer[0], {
   data: data,
   rowHeaders: false,
   colHeaders: ['Title', 'Finished answering?'],
