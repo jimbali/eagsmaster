@@ -16,8 +16,6 @@ require('channels')
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-global.$ = require('jquery')
-
 import '../stylesheets/application'
 
 import 'bootstrap'

@@ -4,9 +4,11 @@ const afterChange = (change, source) => {
   if (source === 'loadData') return
 
   clearTimeout(autosaveNotification)
-  row = data[change[0][0]]
-  key = change[0][1]
-  questionId = row['id']
+
+  const row = data[change[0][0]]
+  const key = change[0][1]
+  const questionId = row['id']
+
   fetch(
     baseUrl + '/' + questionId,
     {
@@ -33,8 +35,9 @@ const afterChange = (change, source) => {
 
 const beforeRemoveRow = (index, amount, physicalRows, source) => {
   for(let i = 0; i < physicalRows.length; i++) {
-    index = physicalRows[i]
-    id = data[index].id
+    const index = physicalRows[i]
+    const id = data[index].id
+    
     fetch(
       baseUrl + '/' + id,
       {

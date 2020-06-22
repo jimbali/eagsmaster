@@ -72,20 +72,6 @@
       <%= f.text_field :nickname, placeholder: 'Nickname' %>
       <%= f.submit 'Add guest player' %>
     <% end %>
-    <script>
-      $(document).on('ajax:success', '#add-guest-form', event => {
-        data2 = event.detail[0];
-        hot2.loadData(data2);
-      });
-    </script>
     <button id="export-csv" class="btn btn-primary">Export CSV</button>
-    <script>
-      $(document).ready(function() {
-        $("#export-csv").click(function(){
-          var exportPlugin = hot2.getPlugin('exportFile');
-          exportPlugin.downloadFile('csv', { columnHeaders: true })
-        });
-      });
-    </script>
   </div>
 </div>

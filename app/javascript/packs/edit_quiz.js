@@ -49,3 +49,15 @@ const hot = new Handsontable(quizContainer, {
   manualColumnResize: true,
   afterChange: afterChange
 })
+
+$(document).on('ajax:success', '#add-guest-form', event => {
+  data = event.detail[0];
+  hot.loadData(data);
+})
+
+$(() => {
+  $('#export-csv').click(() => {
+    let exportPlugin = hot.getPlugin('exportFile')
+    exportPlugin.downloadFile('csv', { columnHeaders: true })
+  })
+})
