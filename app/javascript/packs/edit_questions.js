@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import Handsontable from 'handsontable'
 
 const afterChange = (change, source) => {
