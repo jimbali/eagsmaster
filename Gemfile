@@ -39,7 +39,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.3'
   gem 'simplecov', '~> 0.18', require: false
-  gem 'webdrivers'
+  gem 'webdrivers', require: false
 end
 
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

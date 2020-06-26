@@ -19,12 +19,21 @@ services:
     volumes:
       - ./:/app/:rw
       - node_modules:/app/node_modules
+  chrome:
+    image: selenium/standalone-chrome:4
+    volumes:
+      - /dev/shm:/dev/shm
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: livSbI9IIoawmhk5
+    image: mysql:5.7
   runner:
     build:
       context: ./
       dockerfile: Dockerfile
     command: rspec
     depends_on:
+      - chrome
       - db
     entrypoint: ["/app/bin/wait_for", "db:3306", "--"]
     environment:
@@ -32,9 +41,5 @@ services:
       RACK_ENV: test
     volumes:
       - ./:/app/:rw
-  db:
-    environment:
-      MYSQL_ROOT_PASSWORD: livSbI9IIoawmhk5
-    image: mysql:5.7
 volumes:
   node_modules:
