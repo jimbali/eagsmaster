@@ -23,6 +23,18 @@ services:
     image: selenium/standalone-chrome:4
     volumes:
       - /dev/shm:/dev/shm
+  ci:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: rspec
+    depends_on:
+      - chrome
+      - db
+    entrypoint: ["/app/bin/wait_for", "db:3306", "--"]
+    environment:
+      DATABASE_URL: mysql2://root:livSbI9IIoawmhk5@db/eagsmaster_test
+      RACK_ENV: test
   db:
     environment:
       MYSQL_ROOT_PASSWORD: livSbI9IIoawmhk5
