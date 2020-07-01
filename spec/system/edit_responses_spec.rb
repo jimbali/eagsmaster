@@ -16,16 +16,18 @@ RSpec.describe 'Edit responses', type: :system, js: true do
     click_on 'Submit'
   end
 
-  def edit_cell
-    points_cell.double_click
-    page.driver.browser.switch_to.active_element.send_keys('10')
+  def edit_cell(heading, replacement, offset = 0)
+    cell = cell(heading, offset).double_click
+    page.driver.browser.switch_to.active_element.send_keys(
+      [:backspace] * cell.text.size, replacement
+    )
     page.find('h2').click
   end
 
-  def points_cell
-    column_index = column_with_heading(question.title, '#quiz-root .colHeader')
+  def cell(heading, offset = 0)
+    column_index = column_with_heading(heading, '#quiz-root .colHeader')
     cells = row('#quiz-root .ht_master table.htCore tr').all('td')
-    cells[column_index + 1]
+    cells[column_index + offset]
   end
 
   def column_with_heading(text, selector)
@@ -45,20 +47,31 @@ RSpec.describe 'Edit responses', type: :system, js: true do
     end
   end
 
-  def leaderboard_score
-    column_index = column_with_heading('Points', 'thead td')
+  def leaderboard_cell(heading)
+    column_index = column_with_heading(heading, 'thead td')
     cells = row('tbody tr').all('td')
     cells[column_index].text
   end
 
-  it 'updates the leaderboard' do # rubocop:disable RSpec/MultipleExpectations
+  it 'updates the points on the leaderboard' do
     sign_in quiz.user
     visit edit_quiz_path(id: quiz.id)
-    edit_cell
+    edit_cell(question.title, '10', 1)
     expire_question
-    expect(page).to have_text('Autosaved (1 cell)')
+    page.has_text?('Autosaved (1 cell)')
     sign_in player
     visit quiz_question_path(quiz_id: quiz.id, id: question.id)
-    expect(leaderboard_score).to eq '10'
+    expect(leaderboard_cell('Points')).to eq '10'
+  end
+
+  it 'updates the answer on the leaderboard' do
+    sign_in quiz.user
+    visit edit_quiz_path(id: quiz.id)
+    edit_cell(question.title, 'Prince Charleston')
+    expire_question
+    page.has_text?('Autosaved (1 cell)')
+    sign_in player
+    visit quiz_question_path(quiz_id: quiz.id, id: question.id)
+    expect(leaderboard_cell('Answer')).to eq 'Prince Charleston'
   end
 end
