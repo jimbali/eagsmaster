@@ -2,7 +2,18 @@
 <%= form_with(url: quiz_question_url + '/submit_answer', method: 'post', local: true) do %>
   <div class="form-group">
     <%= text_field_tag(:answer, nil, placeholder: 'Answer',
-                       class: 'form-control') %>
+                       class: 'form-control', disabled: @locked,
+                       value: @question_user.answer) %>
   </div>
-  <%= submit_tag('Submit', class: 'btn btn-primary') %>
+  <%= submit_tag('Submit', class: 'btn btn-primary', disabled: @locked) %>
+
+  <% if @locked %>
+    <%= submit_tag('Unlock', id: 'unlock-answer', class: 'btn btn-secondary',
+                   name: 'unlock_answer') %>
+
+    <div class="mt-4">
+      <p>Waiting for the round to finish...</p>
+    </div>
+    <%= render 'autorefresh' %>
+  <% end %>
 <% end %>

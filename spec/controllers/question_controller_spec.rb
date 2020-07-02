@@ -29,8 +29,8 @@ RSpec.describe QuestionController do
       expect { show }.not_to exceed_query_limit(7)
     end
 
-    it 'renders the waiting template' do
-      expect(show).to render_template(:waiting)
+    it 'renders the enter_answer template' do
+      expect(show).to render_template(:enter_answer)
     end
 
     context 'when the question has expired' do

@@ -55,12 +55,15 @@ class QuestionController < ApplicationController
   def render_question
     return render :answer_summary if @question.expired
 
-    return render :enter_answer if @question_user.answer.nil?
-
-    render :waiting
+    @locked = @question_user.answer.present?
+    render :enter_answer
   end
 
   def update_answer(question_user)
+    if params[:unlock_answer]
+      return question_user.update!(answer: nil, points: nil)
+    end
+
     question_user.answer = params[:answer]
     question_user.save!
   end
