@@ -61,6 +61,7 @@ class QuestionController < ApplicationController
 
   def update_answer(question_user)
     if params[:unlock_answer]
+      flash[:warning] = 'Answer wiped, please submit another.'
       return question_user.update!(answer: nil, points: nil)
     end
 
