@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class QuizController < ApplicationController
+  class ConflictException < RuntimeError; end
+
+  rescue_from ConflictException, with: :conflict_handler
+
+  def conflict_handler(_exception)
+    render status: :conflict, json: progress_data
+  end
+
   def join
     quiz = Quiz.find_by(code: params[:code].upcase)
     if quiz.nil?
@@ -53,8 +61,11 @@ class QuizController < ApplicationController
     @quiz = Quiz.find(params[:quiz_id])
     authorize! :update, @quiz
 
-    row = params[:row]
-    update_questions(row)
+    patch = params.require(:patch).permit(
+      :playerId, :field, :oldValue, :newValue
+    )
+
+    update_question(patch)
 
     render json: progress_data
   end
@@ -83,17 +94,38 @@ class QuizController < ApplicationController
     )
   end
 
-  def update_questions(row)
-    user_id = row[:playerId]
+  def update_question(patch)
+    user_id = patch[:playerId]
 
-    @quiz.questions.each do |question|
-      question_user = QuestionUser.find_or_create_by!(
-        question_id: question.id, user_id: user_id
-      )
-      question_user.answer = row["question#{question.id}Answer"]
-      question_user.points = row["question#{question.id}Points"]
-      question_user.save!
-    end
+    question_users = QuestionUser.where(
+      question_id: @quiz.questions, user_id: user_id
+    )
+
+    match = field_regex.match(patch[:field])
+    question_id = match[1]
+    column = match[2].downcase
+
+    question_user = question_users.find_or_create_by!(question_id: question_id)
+
+    update_field(question_user, patch, column)
+  end
+
+  def update_field(question_user, patch, col)
+    raise ActionController::BadRequest unless %w[answer points].include?(col)
+
+    raise ConflictException if conflict?(question_user, patch[:oldValue], col)
+
+    question_user[col] = patch[:newValue]
+    question_user.save!
+  end
+
+  def conflict?(question_user, old_value, column)
+    old_value = BigDecimal(old_value) if column == 'points'
+    old_value != question_user[column]
+  end
+
+  def field_regex
+    /question(\d+)(Answer|Points)/
   end
 
   def column_headers

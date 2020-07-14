@@ -163,64 +163,83 @@ RSpec.describe QuizController do
 
     let(:player) { players.first }
 
-    let(:row) do
-      {
-        playerId: player.id,
-        rank: 987,
-        team: 'Jiminy Jillikers',
-        totalPoints: 0,
-        "question#{questions.first.id}Answer" => 'Yekaterinburg',
-        "question#{questions.first.id}Points" => 8.2,
-        "question#{questions.second.id}Answer" => 'Novgorod',
-        "question#{questions.second.id}Points" => nil,
-        "question#{questions.third.id}Answer" => 'St. Petersburg',
-        "question#{questions.third.id}Points" => 0
-      }
+    before do
+      sign_in quiz.user
+      post :update_progress, params: { quiz_id: quiz.id, patch: patch }
     end
 
-    let(:updated_progress_data) do
-      progress_data.dup.tap do |data|
-        data.third["question#{questions.first.id}Answer"] = 'Yekaterinburg'
-        data.third["question#{questions.first.id}Points"] = '8.2'
-        data.third["question#{questions.second.id}Answer"] = 'Novgorod'
-        data.third["question#{questions.second.id}Points"] = nil
-        data.third["question#{questions.third.id}Answer"] = 'St. Petersburg'
-        data.third["question#{questions.third.id}Points"] = '0'
-        data.third['totalPoints'] = '8.2'
+    context 'with a valid points update' do
+      let(:patch) do
+        {
+          playerId: player.id,
+          field: "question#{questions.first.id}Points",
+          oldValue: '0',
+          newValue: '8.2'
+        }
+      end
+
+      let(:updated_progress_data) do
+        progress_data.dup.tap do |data|
+          data.third["question#{questions.first.id}Points"] = '8.2'
+          data.third['totalPoints'] = '11.2'
+        end
+      end
+
+      it 'updates the points for the first answer' do
+        expect(player.question_users.first.points).to eq(BigDecimal('8.2'))
+      end
+
+      it 'returns the updated progress data' do
+        expect(response.parsed_body).to eq(updated_progress_data)
       end
     end
 
-    before do
-      sign_in quiz.user
-      post :update_progress, params: { quiz_id: quiz.id, row: row }
+    context 'with a conflicted points update' do
+      let(:patch) do
+        {
+          playerId: player.id,
+          field: "question#{questions.first.id}Points",
+          oldValue: '1.23',
+          newValue: '8.2'
+        }
+      end
+
+      it 'does not update the points for the first answer' do
+        expect(player.question_users.first.points).to eq(BigDecimal('0'))
+      end
+
+      it 'returns the current progress data' do
+        expect(response.parsed_body).to eq(progress_data)
+      end
+
+      it 'has status code 409 Conflict' do
+        expect(response).to have_http_status(:conflict)
+      end
     end
 
-    it 'updates the first answer' do
-      expect(player.question_users.first.answer).to eq('Yekaterinburg')
-    end
+    context 'with a valid answer update' do
+      let(:patch) do
+        {
+          playerId: player.id,
+          field: "question#{questions.first.id}Answer",
+          oldValue: answers.first,
+          newValue: 'Ronald McDonald'
+        }
+      end
 
-    it 'updates the points for the first answer' do
-      expect(player.question_users.first.points).to eq(BigDecimal('8.2'))
-    end
+      let(:updated_progress_data) do
+        progress_data.dup.tap do |data|
+          data.third["question#{questions.first.id}Answer"] = 'Ronald McDonald'
+        end
+      end
 
-    it 'updates the second answer' do
-      expect(player.question_users.second.answer).to eq('Novgorod')
-    end
+      it 'updates the answer for the first answer' do
+        expect(player.question_users.first.answer).to eq('Ronald McDonald')
+      end
 
-    it 'updates the points for the second answer' do
-      expect(player.question_users.second.points).to eq(nil)
-    end
-
-    it 'updates the third answer' do
-      expect(player.question_users.third.answer).to eq('St. Petersburg')
-    end
-
-    it 'updates the points for the third answer' do
-      expect(player.question_users.third.points).to eq(0)
-    end
-
-    it 'returns the updated progress data' do
-      expect(response.parsed_body).to eq(updated_progress_data)
+      it 'returns the updated progress data' do
+        expect(response.parsed_body).to eq(updated_progress_data)
+      end
     end
   end
 
