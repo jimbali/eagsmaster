@@ -163,10 +163,7 @@ RSpec.describe QuizController do
 
     let(:player) { players.first }
 
-    before do
-      sign_in quiz.user
-      post :update_progress, params: { quiz_id: quiz.id, patch: patch }
-    end
+    before { sign_in quiz.user }
 
     context 'with a valid points update' do
       let(:patch) do
@@ -185,12 +182,51 @@ RSpec.describe QuizController do
         end
       end
 
+      before do
+        post :update_progress, params: { quiz_id: quiz.id, patch: patch }
+      end
+
       it 'updates the points for the first answer' do
         expect(player.question_users.first.points).to eq(BigDecimal('8.2'))
       end
 
       it 'returns the updated progress data' do
         expect(response.parsed_body).to eq(updated_progress_data)
+      end
+    end
+
+    context 'with the initial points update' do
+      let(:patch) do
+        {
+          playerId: player.id,
+          field: "question#{questions.first.id}Points",
+          oldValue: nil,
+          newValue: '4.5'
+        }
+      end
+
+      let(:updated_progress_data) do
+        progress_data.dup.tap do |data|
+          data.third["question#{questions.first.id}Points"] = '4.5'
+          data.third['totalPoints'] = '7.5'
+        end
+      end
+
+      before do
+        questions.first.question_users.find_by(user: player).update(points: nil)
+        post :update_progress, params: { quiz_id: quiz.id, patch: patch }
+      end
+
+      it 'updates the points for the first answer' do
+        expect(player.question_users.first.points).to eq(BigDecimal('4.5'))
+      end
+
+      it 'returns the updated progress data' do
+        expect(response.parsed_body).to eq(updated_progress_data)
+      end
+
+      it 'has status code 200 OK' do
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -202,6 +238,10 @@ RSpec.describe QuizController do
           oldValue: '1.23',
           newValue: '8.2'
         }
+      end
+
+      before do
+        post :update_progress, params: { quiz_id: quiz.id, patch: patch }
       end
 
       it 'does not update the points for the first answer' do
@@ -233,6 +273,10 @@ RSpec.describe QuizController do
         end
       end
 
+      before do
+        post :update_progress, params: { quiz_id: quiz.id, patch: patch }
+      end
+
       it 'updates the answer for the first answer' do
         expect(player.question_users.first.answer).to eq('Ronald McDonald')
       end
@@ -253,7 +297,7 @@ RSpec.describe QuizController do
       {
         'playerId' => created_user.id,
         "question#{questions.first.id}Answer" => nil,
-        "question#{questions.first.id}Points" => '0',
+        "question#{questions.first.id}Points" => nil,
         "question#{questions.second.id}Answer" => nil,
         "question#{questions.second.id}Points" => nil,
         "question#{questions.third.id}Answer" => nil,

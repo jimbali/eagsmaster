@@ -119,9 +119,11 @@ class QuizController < ApplicationController
     question_user.save!
   end
 
-  def conflict?(question_user, old_value, column)
-    old_value = BigDecimal(old_value) if column == 'points'
-    old_value != question_user[column]
+  def conflict?(question_user, old_val, column)
+    return false if [old_val, question_user[column]].all?(&:blank?)
+
+    old_val = BigDecimal(old_val) if column == 'points' && old_val.present?
+    old_val != question_user[column]
   end
 
   def field_regex
