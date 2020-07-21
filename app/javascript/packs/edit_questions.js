@@ -1,5 +1,15 @@
 import $ from 'jquery'
 import Handsontable from 'handsontable'
+import 'bootstrap'
+import bootbox from 'bootbox'
+
+const allIn = (questionId) => {
+  const column = 'question' + questionId + 'Points'
+  const data = $('#quiz-root').data('progressJson')
+  return data.every((row) => {
+    return row[column] != null
+  })
+}
 
 const afterChange = (change, source) => {
   if (source === 'loadData') return
@@ -7,9 +17,21 @@ const afterChange = (change, source) => {
   clearTimeout(autosaveNotification)
 
   const row = data[change[0][0]]
-  const key = change[0][1]
   const questionId = row['id']
 
+  const confirmMessage = `
+    Not all answers for this round have points assigned to them.
+    Continue anyway?
+  `
+
+  if (change[0][1] == 'expired' && change[0][3] == true && !allIn(questionId)) {
+    bootbox.confirm(confirmMessage, () => updateQuestion(questionId, row))
+  } else {
+    updateQuestion(questionId, row)
+  }
+}
+
+const updateQuestion = (questionId, row) => {
   fetch(
     baseUrl + '/' + questionId,
     {
@@ -27,10 +49,8 @@ const afterChange = (change, source) => {
     return response.json()
   })
   .then((data) => {
-    questionsConsole.text(
-      'Autosaved (' + change.length + ' ' + 'cell' +
-        (change.length > 1 ? 's' : '') + ')'
-    )
+    questionsConsole.text('Autosaved (1 cell)')
+
     autosaveNotification = setTimeout(function() {
       questionsConsole.text('Changes will be autosaved')
     }, 2000)
