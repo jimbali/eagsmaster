@@ -41,6 +41,7 @@ const afterChange = (changes, source) => {
       quizConsole.text('Changes will be autosaved')
     }, 2000)
     data = newData
+    quizContainer[0].dataset.progressJson = JSON.stringify(data)
     hot.loadData(newData)
   })
 }
@@ -65,8 +66,9 @@ const hot = new Handsontable(quizContainer[0], {
 })
 
 $(document).on('ajax:success', '#add-guest-form', event => {
-  data = event.detail[0];
-  hot.loadData(data);
+  data = event.detail[0]
+  quizContainer[0].dataset.progressJson = JSON.stringify(data)
+  hot.loadData(data)
 })
 
 $(() => {

@@ -34,9 +34,9 @@ RSpec.describe 'Edit responses', type: :system, js: true do
     page.all(selector).find_index { |h| h.text == text }
   end
 
-  def expire_question
+  def expire_question(title)
     tr = page.all('#questions-root .ht_master table.htCore tr').find do |row|
-      row.first('td').text == question.title
+      row.first('td').text == title
     end
     tr.find('td input[type="checkbox"]').click
   end
@@ -57,7 +57,7 @@ RSpec.describe 'Edit responses', type: :system, js: true do
     sign_in quiz.user
     visit edit_quiz_path(id: quiz.id)
     edit_cell(question.title, '10', 1)
-    expire_question
+    expire_question(question.title)
     page.has_text?('Autosaved (1 cell)')
     sign_in player
     visit quiz_question_path(quiz_id: quiz.id, id: question.id)
@@ -68,10 +68,24 @@ RSpec.describe 'Edit responses', type: :system, js: true do
     sign_in quiz.user
     visit edit_quiz_path(id: quiz.id)
     edit_cell(question.title, 'Prince Charleston')
-    expire_question
+    expire_question(question.title)
+    click_on 'OK'
     page.has_text?('Autosaved (1 cell)')
     sign_in player
     visit quiz_question_path(quiz_id: quiz.id, id: question.id)
     expect(leaderboard_cell('Answer')).to eq 'Prince Charleston'
+  end
+
+  it 'warns about expiring a question before all players have points' do
+    sign_in quiz.user
+    visit edit_quiz_path(id: quiz.id)
+    fill_in 'question_title', with: 'Who is Keyzer Soze?'
+    click_on 'Add question'
+    expire_question('Who is Keyzer Soze?')
+    expect(page).to have_selector(
+      '.bootbox-body',
+      text: 'Not all answers for this round have points assigned to them. ' \
+            'Continue anyway?'
+    )
   end
 end
