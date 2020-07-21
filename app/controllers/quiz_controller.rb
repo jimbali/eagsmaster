@@ -88,7 +88,7 @@ class QuizController < ApplicationController
   def create_guest_user
     User.create!(
       nickname: params[:user][:nickname],
-      email: "guestuser#{Random.rand(16)}@example.com",
+      email: "guestuser#{Random.rand(1..1e16.to_i)}@example.com",
       password: SecureRandom.alphanumeric(16),
       guest: true
     )
