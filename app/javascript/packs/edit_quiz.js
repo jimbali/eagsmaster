@@ -1,12 +1,22 @@
 import $ from 'jquery'
 import Handsontable from 'handsontable'
 
-const afterChange = (change, source) => {
+const toastr = require('toastr')
+
+const afterChange = (changes, source) => {
   if (source === 'loadData') return
 
   clearTimeout(autosaveNotification)
 
-  const row = data[change[0][0]]
+  const change = changes[0]
+  const row = data[change[0]]
+
+  const patch = {
+    playerId: row.playerId,
+    field: change[1],
+    oldValue: change[2],
+    newValue: change[3]
+  }
 
   fetch(
     updateProgressUrl,
@@ -16,21 +26,22 @@ const afterChange = (change, source) => {
         'Content-Type': 'application/json',
         'X-CSRF-Token': token
       },
-      body: JSON.stringify({ row: row })
+      body: JSON.stringify({ patch: patch })
     }
   )
   .then((response) => {
+    if (response.status === 409) {
+      toastr.error('Did not update! Value has changed since the last refresh.')
+    }
     return response.json()
   })
   .then((newData) => {
-    quizConsole.text(
-      'Autosaved (' + change.length + ' ' + 'cell' +
-        (change.length > 1 ? 's' : '') + ')'
-    )
+    quizConsole.text('Autosaved (1 cell)')
     autosaveNotification = setTimeout(function() {
       quizConsole.text('Changes will be autosaved')
     }, 2000)
     data = newData
+    quizContainer[0].dataset.progressJson = JSON.stringify(data)
     hot.loadData(newData)
   })
 }
@@ -55,8 +66,9 @@ const hot = new Handsontable(quizContainer[0], {
 })
 
 $(document).on('ajax:success', '#add-guest-form', event => {
-  data = event.detail[0];
-  hot.loadData(data);
+  data = event.detail[0]
+  quizContainer[0].dataset.progressJson = JSON.stringify(data)
+  hot.loadData(data)
 })
 
 $(() => {

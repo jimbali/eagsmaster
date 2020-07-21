@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
+  add_flash_types :warning
+
   before_action :authenticate_user!
 
   def progress_data
