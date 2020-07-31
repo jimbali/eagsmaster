@@ -54,6 +54,7 @@ services:
     volumes:
       - ./app:/app/app:ro
       - ./config:/app/config:ro
+      - ./coverage:/app/coverage:rw
       - ./spec:/app/spec:rw
       - ./tmp:/app/tmp:rw
 volumes:

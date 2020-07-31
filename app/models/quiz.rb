@@ -3,6 +3,7 @@
 class Quiz < ApplicationRecord
   belongs_to :user
   has_many :questions
+  belongs_to :series, optional: true
 
   validates_uniqueness_of :code, case_sensitive: false
 

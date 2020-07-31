@@ -53,7 +53,9 @@ class QuizController < ApplicationController
     quiz = Quiz.find(params[:id])
     authorize! :update, quiz
 
-    quiz.update!(params.require(:quiz).permit(:name, :code, :cursor))
+    quiz.update!(
+      params.require(:quiz).permit(:name, :code, :cursor, :series_id)
+    )
     redirect_to edit_quiz_url id: quiz.id
   end
 

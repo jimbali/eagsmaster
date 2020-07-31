@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :series
+
   get :join, to: 'quiz#join'
 
   get :health, to: 'health#index'
