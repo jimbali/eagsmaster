@@ -12,8 +12,8 @@ fi
 
 project_id="$(gcloud config get-value project -q)"
 
-docker build -t "eagsmaster:$version" . \
-  && docker tag "eagsmaster:$version" "gcr.io/$project_id/eagsmaster:$version" \
-  && docker push "gcr.io/$project_id/eagsmaster:$version" \
+docker login \
+  && docker buildx build --platform linux/arm64,linux/amd64 --push -t "jimbali/eagsmaster:$version" . \
+  && kubectx raspberry-pi \
   && helm upgrade eagsmaster ./k8s/eagsmaster --set "image.tag=$version" \
   && git tag "$version"

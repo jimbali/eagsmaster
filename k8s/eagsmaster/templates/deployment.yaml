@@ -87,7 +87,7 @@ spec:
             - /cloud_sql_proxy
             - -instances=freebail-wedding:europe-west2:freebail-wedding=tcp:5432
             - -credential_file=/secrets/cloudsql/credentials.json
-          image: gcr.io/cloudsql-docker/gce-proxy:1.14
+          image: "{{ .Values.cloudSql.image.repository }}:{{ .Values.cloudSql.image.tag }}"
           name: cloudsql-proxy
           securityContext:
             runAsUser: 2  # non-root user

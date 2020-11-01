@@ -6,8 +6,13 @@ replicaCount: 3
 
 image:
   pullPolicy: IfNotPresent
-  repository: gcr.io/freebail-wedding/eagsmaster
+  repository: jimbali/eagsmaster
   tag: latest
+
+cloudSql:
+  image:
+    repository: jimbali/gce-proxy
+    tag: 1.18.0-alpine
 
 imagePullSecrets: []
 nameOverride: ""

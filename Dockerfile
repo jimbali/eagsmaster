@@ -7,7 +7,10 @@ RUN apk add --no-cache --update build-base \
                                 nodejs \
                                 tzdata \
                                 ruby-dev \
-                                yarn
+                                yarn \
+                                python2 \
+                                g++ \
+                                make
 
 RUN gem install bundler
 
