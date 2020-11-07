@@ -29,6 +29,10 @@ Metrics/BlockLength:
     - config/environments/production.rb
     - spec/**/*
 
+Metrics/MethodLength:
+  Exclude:
+    - scripts/stress.rb
+
 RSpec/ExampleLength:
   Max: 10
 
@@ -40,6 +44,9 @@ Style/ClassAndModuleChildren:
     - app/controllers/users/*.rb
 
 Style/Documentation:
+  Enabled: false
+
+Style/ParallelAssignment:
   Enabled: false
 
 # Pending cops
