@@ -31,9 +31,9 @@ RSpec.describe QuizController do
   end
 
   describe '#show' do
-    include_context 'with existing quiz'
-
     subject(:show) { get :show, params: { id: quiz.id } }
+
+    include_context 'with existing quiz'
 
     before { sign_in quiz.user }
 
@@ -127,9 +127,9 @@ RSpec.describe QuizController do
   end
 
   describe '#update' do
-    include_context 'with existing quiz'
-
     subject(:update) { patch :update, params: { id: quiz.id, quiz: row } }
+
+    include_context 'with existing quiz'
 
     let(:name) { 'NewName' }
     let(:code) { 'NEWCODE' }
