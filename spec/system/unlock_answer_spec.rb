@@ -32,7 +32,7 @@ RSpec.describe 'Unlock answer', type: :system, js: true do
   def player_unlock_answer
     sign_in player
     visit quiz_question_path(quiz_id: quiz.id, id: question.id)
-    click_on 'Unlock'
+    click_on 'Undo'
   end
 
   def edit_cell(heading, replacement, offset = 0)
