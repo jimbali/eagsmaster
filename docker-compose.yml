@@ -20,7 +20,7 @@ services:
       - ./app:/app/app:ro
       - ./config:/app/config:ro
   chrome:
-    image: selenium/standalone-chrome:4
+    image: selenium/standalone-chrome:3
     volumes:
       - /dev/shm:/dev/shm
   ci:
