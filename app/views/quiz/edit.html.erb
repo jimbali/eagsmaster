@@ -73,7 +73,8 @@
         'data-base-url': quiz_question_index_url(quiz_id: @quiz.id),
         'data-column-headers': @column_headers.to_json,
         'data-column-data': @column_data.to_json,
-        'data-update-progress-url': quiz_update_progress_url(quiz_id: @quiz.id)
+        'data-update-progress-url': quiz_update_progress_url(quiz_id: @quiz.id),
+        'data-get-progress-url': quiz_get_progress_url(quiz_id: @quiz.id)
       )
     %>
     <%= javascript_pack_tag 'edit_quiz' %>

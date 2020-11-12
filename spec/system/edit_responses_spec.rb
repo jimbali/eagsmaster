@@ -88,4 +88,27 @@ RSpec.describe 'Edit responses', type: :system, js: true do
             'Continue anyway?'
     )
   end
+
+  context 'with two different sessions' do
+    let(:admin) { Capybara::Session.new(:selenium) }
+
+    it 'warns about expiring a question before all players have points' do
+      Capybara.using_session(admin) do
+        sign_in quiz.user
+        visit edit_quiz_path(id: quiz.id)
+      end
+
+      visit quiz_question_path(quiz_id: quiz.id, id: question.id)
+      click_on 'Undo'
+
+      Capybara.using_session(admin) do
+        expire_question(question.title)
+        expect(page).to have_selector(
+          '.bootbox-body',
+          text: 'Not all answers for this round have points assigned to ' \
+                'them. Continue anyway?'
+        )
+      end
+    end
+  end
 end

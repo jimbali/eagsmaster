@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :quiz do
     post :update_progress, to: 'quiz#update_progress'
     post :add_guest, to: 'quiz#add_guest'
+    get :get_progress, to: 'quiz#get_progress'
 
     resources :question do
       post 'submit_answer', to: 'question#submit_answer'

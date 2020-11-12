@@ -85,6 +85,13 @@ class QuizController < ApplicationController
     render json: progress_data
   end
 
+  def get_progress
+    @quiz = Quiz.find(params[:quiz_id])
+    authorize! :update, @quiz
+
+    render json: progress_data
+  end
+
   private
 
   def create_guest_user
