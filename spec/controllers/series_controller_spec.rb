@@ -24,5 +24,27 @@ RSpec.describe SeriesController do
       expect(post(:create, params: { series: { name: name } }))
         .to redirect_to root_url
     end
+
+    it 'redirects to the redirect_to param' do
+      redirect_url = edit_quiz_url(id: 1)
+
+      expect(
+        post(
+          :create,
+          params: { series: { name: name }, redirect_to: redirect_url }
+        )
+      ).to redirect_to redirect_url
+    end
+
+    context 'when a series already exists with the same name' do
+      before do
+        create(:series, name: name)
+        post :create, params: { series: { name: name } }
+      end
+
+      it { is_expected.to set_flash[:error].to('Name has already been taken') }
+
+      it { is_expected.to redirect_to new_series_url }
+    end
   end
 end
