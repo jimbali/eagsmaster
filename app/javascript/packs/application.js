@@ -19,3 +19,9 @@ require('channels')
 import '../stylesheets/application'
 
 import 'bootstrap'
+
+import EditQuestions from './edit_questions'
+import EditQuiz from './edit_quiz'
+
+const editQuiz = new EditQuiz()
+const editQuestions = new EditQuestions(editQuiz)

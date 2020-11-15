@@ -325,4 +325,17 @@ RSpec.describe QuizController do
       expect(response.parsed_body).to eq(progress_data + [guest_player])
     end
   end
+
+  describe '#get progress' do
+    include_context 'with existing quiz'
+
+    before do
+      sign_in quiz.user
+      get :get_progress, params: { quiz_id: quiz.id }
+    end
+
+    it 'returns the progress data' do
+      expect(response.parsed_body).to eq(progress_data)
+    end
+  end
 end

@@ -8,4 +8,5 @@ class User < ApplicationRecord
 
   has_many :question_users
   has_many :quizzes
+  has_many :series
 end

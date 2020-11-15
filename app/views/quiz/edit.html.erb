@@ -14,6 +14,21 @@
         <%= f.text_field :code, class: 'form-control text-uppercase' %>
       </div>
       <div class="form-group">
+        <%= f.label :series_id, 'Quiz series' %>
+        <%=
+          link_to '(create new series)',
+                  new_series_url(redirect_to: request.url)
+        %>
+        <%=
+          f.collection_select :series_id,
+                              @quiz.user.series,
+                              :id,
+                              :name,
+                              { include_blank: true },
+                              { class: 'custom-select' }
+        %>
+      </div>
+      <div class="form-group">
         <%= f.label :cursor, 'Current question' %>
         <%=
           f.collection_select :cursor,
@@ -33,8 +48,8 @@
     <h3>Questions</h3>
     <p id="questions-console">Changes will be autosaved</p>
     <%=
-      tag(
-        :div, id: 'questions-root',
+      tag.div(
+        id: 'questions-root',
         'data-quiz-json': @questions_data.to_json,
         'data-base-url': quiz_question_index_url(quiz_id: @quiz.id)
       )
@@ -58,7 +73,8 @@
         'data-base-url': quiz_question_index_url(quiz_id: @quiz.id),
         'data-column-headers': @column_headers.to_json,
         'data-column-data': @column_data.to_json,
-        'data-update-progress-url': quiz_update_progress_url(quiz_id: @quiz.id)
+        'data-update-progress-url': quiz_update_progress_url(quiz_id: @quiz.id),
+        'data-get-progress-url': quiz_get_progress_url(quiz_id: @quiz.id)
       )
     %>
     <%= javascript_pack_tag 'edit_quiz' %>
