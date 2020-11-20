@@ -10,10 +10,10 @@ if [[ "$1" == '' ]]
     exit 1
 fi
 
-project_id="$(gcloud config get-value project -q)"
-
 docker login \
   && docker buildx build --platform linux/arm64,linux/amd64 --push -t "jimbali/eagsmaster:$version" . \
   && kubectx raspberry-pi \
   && helm upgrade eagsmaster ./k8s/eagsmaster --set "image.tag=$version" \
+  && kubectl rollout status deployment eagsmaster \
+  && kubectl exec -it deploy/eagsmaster -c eagsmaster -- bundle exec rails db:create db:migrate \
   && git tag "$version"
