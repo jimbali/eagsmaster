@@ -102,8 +102,9 @@ export default class EditQuestions {
   }
 
   constructor(editQuiz) {
-    $(() => {
+    $(document).on('ready turbolinks:load', () => {
       const questionsContainer = $('#questions-root')
+      if (!questionsContainer.length) return
 
       this.editQuiz = editQuiz
       this.questionsConsole = $('#questions-console')

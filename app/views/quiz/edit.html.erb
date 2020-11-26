@@ -54,7 +54,6 @@
         'data-base-url': quiz_question_index_url(quiz_id: @quiz.id)
       )
     %>
-    <%= javascript_pack_tag 'edit_questions' %>
 
     <%= form_for(:question, url: quiz_question_index_url(quiz_id: @quiz.id)) do |f| %>
       <%= f.text_field :title %>
@@ -77,7 +76,6 @@
         'data-get-progress-url': quiz_get_progress_url(quiz_id: @quiz.id)
       )
     %>
-    <%= javascript_pack_tag 'edit_quiz' %>
 
     <%=
       form_for(:user,

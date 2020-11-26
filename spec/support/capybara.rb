@@ -24,8 +24,6 @@ RSpec.configure do |config|
       when /This page includes a password or credit card input in a non-secure
            context/x
         next
-      when /Cannot read property 'ownerDocument' of undefined/
-        next
       else
         message = "[#{log.level}] #{log.message}"
         raise message

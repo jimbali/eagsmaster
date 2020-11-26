@@ -78,9 +78,11 @@ export default class EditQuiz {
   }
 
   constructor() {
-    $(() => {
-      this.quizConsole = $('#quiz-console')
+    $(document).on('ready turbolinks:load', () => {
       this.quizContainer = $('#quiz-root')
+      if (!this.quizContainer.length) return
+
+      this.quizConsole = $('#quiz-console')
       this.data = this.quizContainer.data('progressJson')
       this.autosaveNotification = null
       this.token = $('meta[name="csrf-token"]').attr('content')
