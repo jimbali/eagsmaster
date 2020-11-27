@@ -9,6 +9,15 @@ class QuizController < ApplicationController
     render status: :conflict, json: progress_data
   end
 
+  def index
+    @quizzes_by_series =
+      current_user
+        .quizzes
+        .group_by(&:series)
+        .sort_by { |k, v| k&.name.to_s }
+        .to_h
+  end
+
   def join
     quiz = Quiz.find_by(code: params[:code].upcase)
     if quiz.nil?
