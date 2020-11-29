@@ -18,27 +18,29 @@ export default class Leaderboard {
   recaculateRank(column, order) {
     if (!this.hot) return
 
-    let data = this.hot.getData().slice(0)
+    let data = cloneDeep(this.hot.getData())
 
-    let rank = order == 'asc' ? data.length : 1
+    let rank = 1
     let valueMemo = null
 
-    if (order == 'asc') data = data.reverse()
+    if (order == 'asc') data.reverse()
 
     const newData = data.map((result, i) => {
       const colValue = parseFloat(result[column])
 
-      if (valueMemo && colValue < valueMemo) {
-        rank = order == 'asc' ? data.length - i : i + 1
-      }
+      if (valueMemo && colValue < valueMemo) rank = i + 1
+
       valueMemo = colValue
 
-      const rowIndex = order == 'asc' ? data.length - i : i
-      const row = this.hot.getSourceDataAtRow(this.hot.toPhysicalRow(i))
+      const rowIndex = order == 'asc' ? data.length - 1 - i : i
+      const row = this.hot.getSourceDataAtRow(this.hot.toPhysicalRow(rowIndex))
       row['rank'] = rank
 
       return row
     })
+
+    if (order == 'asc') newData.reverse()
+
     this.hot.loadData(newData)
   }
 
