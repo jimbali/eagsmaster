@@ -10,10 +10,19 @@
     <% end %>
     <div class="mt-4">
       <h2>Your quizzes</h2>
-      <div class="list-group">
-      <% current_user.quizzes.each do |quiz| %>
-        <%= link_to quiz.name, edit_quiz_url(quiz.id),
-                    class: 'list-group-item list-group-item-action' %>
+      <% @quizzes_by_series.each do |series, quizzes| %>
+        <h6 class="mt-4">
+          <% if series %>
+            <%= link_to series.name, series_url(series.id) %>
+          <% else %>
+            No series
+          <% end %>
+        </h6>
+        <div class="list-group">
+        <% quizzes.each do |quiz| %>
+          <%= link_to quiz.name, edit_quiz_url(quiz.id),
+                      class: 'list-group-item list-group-item-action' %>
+        <% end %>
       <% end %>
       </div>
     </div>

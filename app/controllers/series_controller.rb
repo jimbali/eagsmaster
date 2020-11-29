@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class SeriesController < ApplicationController
+  def show
+    @series = Series.find(params[:id])
+    @leaderboard_json = @series.leaderboard.to_json
+  end
+
   def new
     @series = Series.new
     @redirect_to = params[:redirect_to]

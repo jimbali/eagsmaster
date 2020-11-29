@@ -22,6 +22,8 @@ import 'bootstrap'
 
 import EditQuestions from './edit_questions'
 import EditQuiz from './edit_quiz'
+import Leaderboard from './leaderboard'
 
 const editQuiz = new EditQuiz()
 const editQuestions = new EditQuestions(editQuiz)
+const leaderboard = new Leaderboard()
