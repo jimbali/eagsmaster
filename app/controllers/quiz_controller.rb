@@ -11,11 +11,10 @@ class QuizController < ApplicationController
 
   def index
     @quizzes_by_series =
-      current_user
-        .quizzes
-        .group_by(&:series)
-        .sort_by { |k, v| k&.name.to_s }
-        .to_h
+      current_user.quizzes
+                  .group_by(&:series)
+                  .sort_by { |k, _v| k&.name.to_s }
+                  .to_h
   end
 
   def join
