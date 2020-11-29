@@ -1,15 +1,18 @@
 import $ from 'jquery'
 import Handsontable from 'handsontable'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default class Leaderboard {
   #autosaveNotification = null
 
   afterColumnSort(currentSortConfig, destinationSortConfigs) {
     const config = destinationSortConfigs[0]
-    const columnNumber = config ? config.column : 2
-    const order = config ? config.sortOrder : 'desc'
+    if (!config) {
+      this.hot.loadData(cloneDeep(this.originalData))
+      return
+    }
 
-    this.recaculateRank(columnNumber, order)
+    this.recaculateRank(config.column, config.sortOrder)
   }
 
   recaculateRank(column, order) {
@@ -45,6 +48,7 @@ export default class Leaderboard {
       if (!leaderboardContainer.length) return
 
       const data = leaderboardContainer.data('leaderboardJson')
+      this.originalData = cloneDeep(data)
       this.hot = new Handsontable(leaderboardContainer[0], {
         data: data,
         rowHeaders: false,
