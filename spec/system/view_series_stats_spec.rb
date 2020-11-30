@@ -7,7 +7,13 @@ RSpec.describe 'View series stats', type: :system, js: true do
   let(:quizzes) { create_list(:quiz, 2, series: series) }
   let(:questions1) { create_list(:question, 3, quiz: quizzes.first) }
   let(:questions2) { create_list(:question, 3, quiz: quizzes.second) }
-  let(:players) { create_list(:user, 5) }
+
+  let(:players) do
+    create_list(:user, 5) do |user, i|
+      user.nickname = "Player#{i}"
+      user.save
+    end
+  end
 
   def populate_quiz(data, questions)
     data.each_with_index do |scores, p|
@@ -78,13 +84,23 @@ RSpec.describe 'View series stats', type: :system, js: true do
   it 'returns to the original order when not explicitly sorted' do
     page.find('span', text: 'Questions Answered').click.click.click
 
-    expect(data).to eq(
+    # Ordering of players with equal rank seems to be random
+    expect(data).to be_in(
       [
-        ['1', players[4].nickname, '32', '5', '6.4'],
-        ['2', players[0].nickname, '15', '6', '2.5'],
-        ['2', players[1].nickname, '15', '6', '2.5'],
-        ['4', players[2].nickname, '13', '6', '2.166666666666666667'],
-        ['5', players[3].nickname, '10.2', '5', '2.04']
+        [
+          ['1', players[4].nickname, '32', '5', '6.4'],
+          ['2', players[0].nickname, '15', '6', '2.5'],
+          ['2', players[1].nickname, '15', '6', '2.5'],
+          ['4', players[2].nickname, '13', '6', '2.166666666666666667'],
+          ['5', players[3].nickname, '10.2', '5', '2.04']
+        ],
+        [
+          ['1', players[4].nickname, '32', '5', '6.4'],
+          ['2', players[1].nickname, '15', '6', '2.5'],
+          ['2', players[0].nickname, '15', '6', '2.5'],
+          ['4', players[2].nickname, '13', '6', '2.166666666666666667'],
+          ['5', players[3].nickname, '10.2', '5', '2.04']
+        ]
       ]
     )
   end
