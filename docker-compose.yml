@@ -13,6 +13,7 @@ services:
       DB_HOST: db
       DB_PASSWORD: livSbI9IIoawmhk5
       RACK_ENV: development
+      THEME: xmas
     ports:
       - 3000:3000/tcp
     tmpfs: /app/tmp
