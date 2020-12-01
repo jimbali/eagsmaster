@@ -16,9 +16,12 @@ class Series < ApplicationRecord
       .where(question: [questions])
       .group(:user_id)
       .select(
-        'question_users.*, users.nickname as team, ' \
-        'IFNULL(SUM(points), 0) as total_points, ' \
-        'COUNT(points) as questions_answered'
+        'question_users.*, users.nickname AS team, ' \
+        'IFNULL(SUM(points), 0) AS total_points, ' \
+        'COUNT(points) AS questions_answered, ' \
+        'COUNT(' \
+          'CASE WHEN question_users.points=10 THEN 1 ELSE NULL END' \
+        ') AS ten_point_answers'
       )
       .order(total_points: :desc)
   end
@@ -42,7 +45,10 @@ class Series < ApplicationRecord
       'team' => result.team,
       'totalPoints' => format('%<total>g', total: result.total_points),
       'questionsAnswered' => result.questions_answered,
-      'averageQuestionScore' => result.total_points / result.questions_answered
+      'averageQuestionScore' => result.total_points / result.questions_answered,
+      'tenPointAnswers' => result.ten_point_answers,
+      'tenPointAnswerProbablility' =>
+        "#{result.ten_point_answers.to_f / result.questions_answered * 100}%"
     }
   end
 end

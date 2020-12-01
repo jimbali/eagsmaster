@@ -59,14 +59,19 @@ export default class Leaderboard {
           'Team',
           'Total Points',
           'Questions Answered',
-          'Average Question Score'
+          'Average Question Score',
+          'Ten Point Answers',
+          'Ten Points Probability'
         ],
         columns: [
           { data: 'rank' },
           { data: 'team' },
           { data: 'totalPoints' },
           { data: 'questionsAnswered' },
-          { data: 'averageQuestionScore' }
+          { data: 'averageQuestionScore' },
+          { data: 'tenPointAnswers' },
+          { data: 'tenPointAnswerProbablility' },
+
         ],
         filters: true,
         dropdownMenu: true,
