@@ -37,7 +37,7 @@ RSpec.describe 'View series stats', type: :system, js: true do
 
   def populate_quiz2
     populate_quiz(
-      [[3, 2, 3], [1, 2, 3.5], [2.5, 2, 0], [0, 10, 0.1], [9, 5, nil]],
+      [[3, 2, 3], [1, 2, 3.5], [2.1, 2, 0], [0, 10, 0.1], [9, 5, nil]],
       questions2
     )
   end
@@ -58,11 +58,11 @@ RSpec.describe 'View series stats', type: :system, js: true do
   it 'has the correct initial data' do
     expect(data).to eq(
       [
-        ['1', players[4].nickname, '32', '5', '6.4'],
-        ['2', players[0].nickname, '15', '6', '2.5'],
-        ['2', players[1].nickname, '15', '6', '2.5'],
-        ['4', players[2].nickname, '13', '6', '2.166666666666666667'],
-        ['5', players[3].nickname, '10.2', '5', '2.04']
+        ['1', players[4].nickname, '32', '5', '6.4', '1', '20.0%'],
+        ['2', players[0].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['2', players[1].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['4', players[2].nickname, '12.6', '6', '2.1', '0', '0.0%'],
+        ['5', players[3].nickname, '10.2', '5', '2.04', '1', '20.0%']
       ]
     )
   end
@@ -72,11 +72,11 @@ RSpec.describe 'View series stats', type: :system, js: true do
 
     expect(data).to eq(
       [
-        ['4', players[4].nickname, '32', '5', '6.4'],
-        ['4', players[3].nickname, '10.2', '5', '2.04'],
-        ['1', players[0].nickname, '15', '6', '2.5'],
-        ['1', players[1].nickname, '15', '6', '2.5'],
-        ['1', players[2].nickname, '13', '6', '2.166666666666666667']
+        ['4', players[4].nickname, '32', '5', '6.4', '1', '20.0%'],
+        ['4', players[3].nickname, '10.2', '5', '2.04', '1', '20.0%'],
+        ['1', players[0].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['1', players[1].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['1', players[2].nickname, '12.6', '6', '2.1', '0', '0.0%']
       ]
     )
   end
@@ -85,22 +85,21 @@ RSpec.describe 'View series stats', type: :system, js: true do
     page.find('span', text: 'Questions Answered').click.click.click
 
     # Ordering of players with equal rank seems to be random
-    expect(data).to be_in(
+    expect(data).to eq(
       [
-        [
-          ['1', players[4].nickname, '32', '5', '6.4'],
-          ['2', players[0].nickname, '15', '6', '2.5'],
-          ['2', players[1].nickname, '15', '6', '2.5'],
-          ['4', players[2].nickname, '13', '6', '2.166666666666666667'],
-          ['5', players[3].nickname, '10.2', '5', '2.04']
-        ],
-        [
-          ['1', players[4].nickname, '32', '5', '6.4'],
-          ['2', players[1].nickname, '15', '6', '2.5'],
-          ['2', players[0].nickname, '15', '6', '2.5'],
-          ['4', players[2].nickname, '13', '6', '2.166666666666666667'],
-          ['5', players[3].nickname, '10.2', '5', '2.04']
-        ]
+        ['1', players[4].nickname, '32', '5', '6.4', '1', '20.0%'],
+        ['2', players[0].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['2', players[1].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['4', players[2].nickname, '12.6', '6', '2.1', '0', '0.0%'],
+        ['5', players[3].nickname, '10.2', '5', '2.04', '1', '20.0%']
+      ]
+    ).or eq(
+      [
+        ['1', players[4].nickname, '32', '5', '6.4', '1', '20.0%'],
+        ['2', players[1].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['2', players[0].nickname, '15', '6', '2.5', '0', '0.0%'],
+        ['4', players[2].nickname, '12.6', '6', '2.1', '0', '0.0%'],
+        ['5', players[3].nickname, '10.2', '5', '2.04', '1', '20.0%']
       ]
     )
   end

@@ -66,11 +66,11 @@ export default class Leaderboard {
         columns: [
           { data: 'rank' },
           { data: 'team' },
-          { data: 'totalPoints' },
-          { data: 'questionsAnswered' },
-          { data: 'averageQuestionScore' },
-          { data: 'tenPointAnswers' },
-          { data: 'tenPointAnswerProbablility' },
+          { data: 'totalPoints', type: 'numeric' },
+          { data: 'questionsAnswered', type: 'numeric' },
+          { data: 'averageQuestionScore', type: 'numeric' },
+          { data: 'tenPointAnswers', type: 'numeric' },
+          { data: 'tenPointAnswerProbablility', type: 'numeric' },
 
         ],
         filters: true,
