@@ -4,7 +4,7 @@ class Series < ApplicationRecord
   belongs_to :user
   has_many :quizzes
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, case_sensitive: true
 
   def questions
     Question.where(quiz: quizzes)
