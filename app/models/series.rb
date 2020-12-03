@@ -45,10 +45,16 @@ class Series < ApplicationRecord
       'team' => result.team,
       'totalPoints' => format('%<total>g', total: result.total_points),
       'questionsAnswered' => result.questions_answered,
-      'averageQuestionScore' => result.total_points / result.questions_answered,
+      'averageQuestionScore' => format(
+        '%<avg>.3f',
+        avg: result.total_points / result.questions_answered
+      ),
       'tenPointAnswers' => result.ten_point_answers,
-      'tenPointAnswerProbablility' =>
-        "#{result.ten_point_answers.to_f / result.questions_answered * 100}%"
+      'tenPointAnswerProbablility' => format(
+        '%<probability>.2f%%',
+        probability:
+          "#{result.ten_point_answers.to_f / result.questions_answered * 100}"
+      )
     }
   end
 end
