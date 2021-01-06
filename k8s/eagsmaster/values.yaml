@@ -14,7 +14,7 @@ cloudSql:
     repository: jimbali/gce-proxy
     tag: 1.18.0-alpine
 
-theme: xmas
+theme:
 
 imagePullSecrets: []
 nameOverride: ""
