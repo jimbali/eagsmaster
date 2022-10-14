@@ -7,7 +7,7 @@ replicaCount: 2
 image:
   pullPolicy: IfNotPresent
   repository: jimbali/eagsmaster
-  tag: latest
+  tag: 0.18.2
 
 cloudSql:
   image:
