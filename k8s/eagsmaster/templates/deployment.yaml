@@ -109,4 +109,4 @@ spec:
       volumes:
         - name: eagsmaster-cloudsql-instance-credentials
           secret:
-            secretName: cloudsql-instance-credentials
+            secretName: {{ include "eagsmaster.cloudsqlSecretName" . }}

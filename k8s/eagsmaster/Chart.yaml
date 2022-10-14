@@ -2,5 +2,4 @@ apiVersion: v2
 name: eagsmaster
 description: A Helm chart for Eagsmaster
 type: application
-version: 0.2.0
-appVersion: 0.8.0
+version: 0.3.0

@@ -61,3 +61,10 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Define the name of the CloudSQL secret
+*/}}
+{{- define "eagsmaster.cloudsqlSecretName" -}}
+{{- printf "%s-cloudsql-instance-credentials" .Release.Name -}}
+{{- end -}}
