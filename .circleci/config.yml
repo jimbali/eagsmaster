@@ -7,4 +7,4 @@ jobs:
      - run: docker compose run -d ci tail -f /dev/null
      - run: docker compose exec ci bundle exec rails db:create db:migrate
      - run: docker compose exec ci bundle exec rspec
-     - run: docker compose down -v
+     - run: docker compose down -v || true
