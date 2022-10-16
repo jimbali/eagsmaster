@@ -19,6 +19,7 @@ WORKDIR /app
 COPY .ruby-version ./
 COPY Gemfile* ./
 
+RUN bundle config set force_ruby_platform true
 RUN bundle install
 
 COPY . .
